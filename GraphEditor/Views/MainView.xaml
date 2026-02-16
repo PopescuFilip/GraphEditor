@@ -9,25 +9,8 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid>
-        <TextBlock Text="{Binding MyString}" />
-        <Canvas Background="LightGray" MouseLeftButtonDown="Canvas_MouseLeftButtonDown">
-            <ItemsControl ItemsSource="{Binding Nodes}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Ellipse
-                            Canvas.Left="{Binding Position.X}"
-                            Canvas.Top="{Binding Position.Y}"
-                            Width="{Binding DataContext.NodeSize, RelativeSource={RelativeSource AncestorType=Window}}"
-                            Height="{Binding DataContext.NodeSize, RelativeSource={RelativeSource AncestorType=Window}}"
-                            Fill="OrangeRed" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Canvas>
+        <ScrollViewer>
+            <Canvas Name="PointsCanvas" Background="White" MouseLeftButtonDown="Canvas_MouseLeftButtonDown"/>
+        </ScrollViewer>
     </Grid>
 </UserControl>
