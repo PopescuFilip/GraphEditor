@@ -8,5 +8,23 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <TextBlock Text="{Binding MyString}"/>
+        <Canvas Background="LightGray" MouseLeftButtonDown="Canvas_MouseLeftButtonDown">
+            <ItemsControl ItemsSource="{Binding Nodes}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Ellipse Width="{Binding DataContext.NodeSize, RelativeSource={RelativeSource AncestorType=Window}}"
+                     Height="{Binding DataContext.NodeSize, RelativeSource={RelativeSource AncestorType=Window}}"
+                     Fill="OrangeRed"
+                     Canvas.Left="{Binding Position.X}"
+                     Canvas.Top="{Binding Position.Y}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Canvas>
     </Grid>
 </UserControl>
