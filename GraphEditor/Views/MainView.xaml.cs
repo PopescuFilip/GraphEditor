@@ -1,4 +1,5 @@
-﻿using GraphEditor.ViewModels;
+﻿using GraphEditor.Models;
+using GraphEditor.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -24,23 +25,42 @@ public partial class MainView : UserControl
         var vm = DataContext as MainViewModel;
         var clickPosition = e.GetPosition(sender as UIElement);
         vm?.AddNodeCommand.Execute(clickPosition);
-        DrawPoints(vm!.Nodes.Select(p => p.Position));
+        DrawPoints(vm!.Nodes);
     }
 
-    private void DrawPoints(IEnumerable<Point> points)
+    private void DrawPoints(IEnumerable<Node> nodes)
     {
-        foreach (var point in points)
+        foreach (var node in nodes)
         {
-            Ellipse ellipse = new()
+            var ellipse = new Ellipse
             {
                 Width = NodeSize,
                 Height = NodeSize,
-                Fill = Brushes.Red
+                Fill = Brushes.White,
+                Stroke = Brushes.Black,
+                StrokeThickness = 1
             };
 
-            Canvas.SetLeft(ellipse, point.X - NodeSize / 2);
-            Canvas.SetTop(ellipse, point.Y - NodeSize / 2);
-            PointsCanvas.Children.Add(ellipse);
+            var text = new TextBlock
+            {
+                Text = node.Number.ToString(),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                FontWeight = FontWeights.Bold
+            };
+
+            var nodeGrid = new Grid
+            {
+                Width = NodeSize,
+                Height = NodeSize
+            };
+            nodeGrid.Children.Add(ellipse);
+            nodeGrid.Children.Add(text);
+
+            Canvas.SetLeft(nodeGrid, node.Position.X - NodeSize / 2);
+            Canvas.SetTop(nodeGrid, node.Position.Y - NodeSize / 2);
+
+            PointsCanvas.Children.Add(nodeGrid);
         }
     }
 }

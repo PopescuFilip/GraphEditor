@@ -4,5 +4,6 @@ namespace GraphEditor.Models;
 
 public class Node
 {
-    public Point Position { get; set; }
+    public int Number { get; init; }
+    public Point Position { get; init; }
 }

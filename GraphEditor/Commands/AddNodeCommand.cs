@@ -8,6 +8,7 @@ public class AddNodeCommand(MainViewModel _vm) : CommandBase<Point>, ICommand<Po
 {
     public override void Execute(Point parameter)
     {
-        _vm.Nodes.Add(new Node { Position = parameter });
+        var nodeNumber = _vm.Nodes.Count + 1;
+        _vm.Nodes.Add(new Node { Number = nodeNumber, Position = parameter });
     }
 }
