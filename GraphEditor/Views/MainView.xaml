@@ -1,27 +1,30 @@
-﻿<UserControl x:Class="GraphEditor.Views.MainView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:GraphEditor.Views"
-             mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl
+    x:Class="GraphEditor.Views.MainView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:GraphEditor.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
     <Grid>
-        <TextBlock Text="{Binding MyString}"/>
+        <TextBlock Text="{Binding MyString}" />
         <Canvas Background="LightGray" MouseLeftButtonDown="Canvas_MouseLeftButtonDown">
             <ItemsControl ItemsSource="{Binding Nodes}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <Canvas/>
+                        <Canvas />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Ellipse Width="{Binding DataContext.NodeSize, RelativeSource={RelativeSource AncestorType=Window}}"
-                     Height="{Binding DataContext.NodeSize, RelativeSource={RelativeSource AncestorType=Window}}"
-                     Fill="OrangeRed"
-                     Canvas.Left="{Binding Position.X}"
-                     Canvas.Top="{Binding Position.Y}"/>
+                        <Ellipse
+                            Canvas.Left="{Binding Position.X}"
+                            Canvas.Top="{Binding Position.Y}"
+                            Width="{Binding DataContext.NodeSize, RelativeSource={RelativeSource AncestorType=Window}}"
+                            Height="{Binding DataContext.NodeSize, RelativeSource={RelativeSource AncestorType=Window}}"
+                            Fill="OrangeRed" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
