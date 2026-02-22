@@ -68,7 +68,7 @@ public class EdgeViewModel : ViewModelBase
             dir.Normalize();
             var perp = new Vector(-dir.Y, dir.X);
 
-            double offsetDistance = 30;
+            double offsetDistance = 15;
             return new Point(mid.X + perp.X * offsetDistance, mid.Y + perp.Y * offsetDistance);
         }
     }
