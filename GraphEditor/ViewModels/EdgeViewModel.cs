@@ -13,10 +13,33 @@ public class EdgeViewModel : ViewModelBase
     public NodeViewModel StartNode { get; }
     public NodeViewModel EndNode { get; }
 
-    public int Flow { get; }
-    public int Capacity { get; }
+    private int _flow;
+    public int Flow
+    {
+        get => _flow;
+        set
+        {
+            _flow = value;
+            OnPropertyChanged(nameof(Flow));
+            OnPropertyChanged(nameof(FlowCapacity));
+        }
+    }
+
+    private int _capacity;
+    public int Capacity
+    {
+        get => _capacity;
+        set
+        {
+            _capacity = value;
+            OnPropertyChanged(nameof(Capacity));
+            OnPropertyChanged(nameof(FlowCapacity));
+        }
+    }
 
     public string FlowCapacity => $"{Flow}/{Capacity}";
+
+    public string EdgeName => $"{StartNode.Number} -> {EndNode.Number}";
 
     public PathGeometry PathGeometry => GetPathGeometry();
 

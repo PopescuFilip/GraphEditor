@@ -30,6 +30,7 @@ public partial class App : Application
                 })
             .AddSingleton<MainViewModel>()
             .AddSingleton<GraphViewModel>()
+            .AddSingleton<EditEdgesViewModel>()
             .BuildServiceProvider();
     }
 }

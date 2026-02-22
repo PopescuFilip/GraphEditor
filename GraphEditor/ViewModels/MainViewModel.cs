@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using GraphEditor.Commands;
+using Microsoft.Extensions.DependencyInjection;
+using System.Windows.Input;
 
 namespace GraphEditor.ViewModels;
 

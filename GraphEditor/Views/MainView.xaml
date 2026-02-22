@@ -2,9 +2,11 @@
     x:Class="GraphEditor.Views.MainView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:b="clr-namespace:GraphEditor.Behaviors"
     xmlns:constants="clr-namespace:GraphEditor.Constants"
     xmlns:conv="clr-namespace:GraphEditor.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:GraphEditor.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
@@ -16,60 +18,131 @@
         <conv:CenterOffsetConverter x:Key="CenterOffsetConverter" />
     </UserControl.Resources>
     <Grid Background="Transparent">
-        <ItemsControl IsHitTestVisible="False" ItemsSource="{Binding Edges}">
+        <DockPanel>
+            <i:Interaction.Behaviors>
+                <b:NoClickPropagationBehavior />
+            </i:Interaction.Behaviors>
+            <Border
+                Width="250"
+                Background="#F3F3F3"
+                BorderBrush="Black"
+                BorderThickness="1"
+                DockPanel.Dock="Right">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+                    <TextBlock
+                        Margin="10"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Text="Edge Inspector" />
 
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <local:EdgeView/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
+                    <DataGrid
+                        Grid.Row="1"
+                        AutoGenerateColumns="False"
+                        Background="Transparent"
+                        CanUserAddRows="False"
+                        GridLinesVisibility="Horizontal"
+                        HeadersVisibility="Column"
+                        ItemsSource="{Binding Edges}">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding EdgeName}"
+                                Header="Edge"
+                                IsReadOnly="True" />
 
-        </ItemsControl>
+                            <DataGridTemplateColumn Width="60" Header="Flow">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Text="{Binding Flow, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
 
-        <ItemsControl
-            Background="Transparent"
-            ItemsSource="{Binding Nodes}"
-            MouseLeftButtonDown="Canvas_MouseLeftButtonDown">
+                            <DataGridTemplateColumn Width="60" Header="Cap">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Text="{Binding Capacity, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+            <Border BorderBrush="Black" BorderThickness="1">
+                <Grid>
+                    <ItemsControl IsHitTestVisible="False" ItemsSource="{Binding Edges}">
 
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
 
-            <ItemsControl.ItemContainerStyle>
-                <Style>
-                    <Setter Property="Canvas.Left">
-                        <Setter.Value>
-                            <MultiBinding Converter="{StaticResource CenterOffsetConverter}">
-                                <Binding Path="Position.X" />
-                                <Binding Source="{x:Static constants:UIConstants.NodeSize}" />
-                            </MultiBinding>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="Canvas.Top">
-                        <Setter.Value>
-                            <MultiBinding Converter="{StaticResource CenterOffsetConverter}">
-                                <Binding Path="Position.Y" />
-                                <Binding Source="{x:Static constants:UIConstants.NodeSize}" />
-                            </MultiBinding>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ItemsControl.ItemContainerStyle>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <local:EdgeView />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
 
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <local:NodeView />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ItemsControl
+                        Background="Transparent"
+                        ItemsSource="{Binding Nodes}"
+                        MouseLeftButtonDown="Canvas_MouseLeftButtonDown">
 
-        </ItemsControl>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemContainerStyle>
+                            <Style>
+                                <Setter Property="Canvas.Left">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource CenterOffsetConverter}">
+                                            <Binding Path="Position.X" />
+                                            <Binding Source="{x:Static constants:UIConstants.NodeSize}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Canvas.Top">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource CenterOffsetConverter}">
+                                            <Binding Path="Position.Y" />
+                                            <Binding Source="{x:Static constants:UIConstants.NodeSize}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <local:NodeView />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                    </ItemsControl>
+                </Grid>
+            </Border>
+        </DockPanel>
     </Grid>
 </UserControl>
