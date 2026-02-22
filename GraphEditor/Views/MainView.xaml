@@ -50,7 +50,7 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <local:NodeView/>
+                    <local:NodeView />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
 

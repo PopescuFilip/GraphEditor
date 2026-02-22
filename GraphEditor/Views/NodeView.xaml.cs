@@ -12,9 +12,4 @@ public partial class NodeView : UserControl
     {
         InitializeComponent();
     }
-
-    private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        Console.WriteLine("dsas");
-    }
 }

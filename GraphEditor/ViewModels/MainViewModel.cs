@@ -1,5 +1,4 @@
 ﻿using GraphEditor.Commands;
-using GraphEditor.Models;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -9,12 +8,17 @@ public class MainViewModel : ViewModelBase
 {
     public ViewModelBase CurrentViewModel => this;
 
-    public ObservableCollection<Node> Nodes { get; set; } = [];
+    public ObservableCollection<NodeViewModel> Nodes { get; set; } = [];
 
     public ICommand<Point> AddNodeCommand { get; }
 
     public MainViewModel()
     {
         AddNodeCommand = new AddNodeCommand(this);
+    }
+
+    public void OnNodeSelected(NodeViewModel nodeViewModel)
+    {
+
     }
 }
