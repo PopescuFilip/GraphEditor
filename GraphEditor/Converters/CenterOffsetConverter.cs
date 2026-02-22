@@ -7,8 +7,8 @@ public class CenterOffsetConverter : IMultiValueConverter
 {
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
-        double position = (double)values[0];
-        double size = (double)values[1];
+        var position = (double)values[0];
+        var size = (double)values[1];
 
         return position - size / 2;
     }
