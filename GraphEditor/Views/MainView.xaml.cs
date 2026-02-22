@@ -1,4 +1,6 @@
-﻿using GraphEditor.ViewModels;
+﻿using GraphEditor.Models;
+using GraphEditor.ViewModels;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,16 +12,35 @@ namespace GraphEditor.Views;
 /// </summary>
 public partial class MainView : UserControl
 {
+    private MainViewModel _vm = null!;
+
     public MainView()
     {
         InitializeComponent();
     }
 
+    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        _vm = (DataContext as MainViewModel)!;
+        _vm.Nodes.CollectionChanged += UpdateCanvas;
+    }
+
+    private void UpdateCanvas(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        switch (e.Action)
+        {
+            case NotifyCollectionChangedAction.Add:
+                var newNode = e.NewItems!.OfType<Node>().Single();
+                PointsCanvas.Children.Add(new CanvasNodeView(newNode));
+                break;
+            default:
+                break;
+        }
+    }
+
     private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        var vm = (DataContext as MainViewModel)!;
         var clickPosition = e.GetPosition(sender as UIElement);
-        vm.AddNodeCommand.Execute(clickPosition);
-        vm.UpdateCanvas(PointsCanvas);
+        _vm.AddNodeCommand.Execute(clickPosition);
     }
 }

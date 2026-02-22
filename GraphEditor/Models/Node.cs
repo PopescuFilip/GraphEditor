@@ -2,8 +2,4 @@
 
 namespace GraphEditor.Models;
 
-public class Node
-{
-    public int Number { get; init; }
-    public Point Position { get; init; }
-}
+public record Node(int Number, Point Position);
