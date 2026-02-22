@@ -17,6 +17,9 @@
     <UserControl.Resources>
         <conv:CenterOffsetConverter x:Key="CenterOffsetConverter" />
     </UserControl.Resources>
+    <UserControl.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding ClearSelection}" />
+    </UserControl.InputBindings>
     <Grid Background="Transparent">
         <DockPanel>
             <i:Interaction.Behaviors>

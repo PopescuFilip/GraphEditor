@@ -64,8 +64,8 @@ public class EdgeViewModel : ViewModelBase
     {
         StartNode = startNode;
         EndNode = endNode;
-        Flow = new Random().Next(20);
-        Capacity = new Random().Next(20);
+        Flow = 0;
+        Capacity = 0;
         OnClick = new RelayCommand(() => IsSelected = !IsSelected);
     }
 

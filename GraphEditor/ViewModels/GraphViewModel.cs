@@ -1,6 +1,7 @@
 ﻿using GraphEditor.Commands;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Input;
 
 namespace GraphEditor.ViewModels;
 
@@ -14,10 +15,12 @@ public class GraphViewModel : ViewModelBase
     public ObservableCollection<EdgeViewModel> Edges { get; set; } = [];
 
     public ICommand<Point> AddNodeCommand { get; }
+    public ICommand ClearSelection { get; }
 
     public GraphViewModel()
     {
         AddNodeCommand = new AddNodeCommand(this);
+        ClearSelection = new RelayCommand(ClearEdgesSelection);
     }
 
     public void OnNodeSelected(NodeViewModel clickedNode)
@@ -49,12 +52,21 @@ public class GraphViewModel : ViewModelBase
         if (firstNode is null || secondNode is null)
             return;
 
-        var newEdge = new EdgeViewModel(firstNode, secondNode);
-        Edges.Add(newEdge);
+        if (!Edges.Where(x => x.StartNode == firstNode && x.EndNode == secondNode).Any())
+        {
+            var newEdge = new EdgeViewModel(firstNode, secondNode);
+            Edges.Add(newEdge);
+        }
 
         firstNode.IsSelected = false;
         secondNode.IsSelected = false;
         firstNode = null;
         secondNode = null;
+    }
+
+    private void ClearEdgesSelection()
+    {
+        foreach (var edge in Edges)
+            edge.IsSelected = false;
     }
 }
