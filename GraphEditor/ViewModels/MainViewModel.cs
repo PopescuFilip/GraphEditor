@@ -1,16 +1,28 @@
-﻿using GraphEditor.Commands;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.ObjectModel;
-using System.Windows;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace GraphEditor.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
-    public ViewModelBase CurrentViewModel { get; }
+    private readonly IServiceProvider _service;
+
+    private ViewModelBase _currentViewModel;
+    public ViewModelBase CurrentViewModel
+    {
+        get => _currentViewModel;
+        set
+        {
+            _currentViewModel = value;
+            OnPropertyChanged(nameof(CurrentViewModel));
+        }
+    }
 
     public MainViewModel(IServiceProvider service)
     {
-        CurrentViewModel = service.GetRequiredService<GraphViewModel>();
+        _service = service;
+        CurrentViewModel = _service.GetRequiredService<GraphViewModel>();
     }
+
+    public void Navigate<T>() where T : ViewModelBase =>
+        CurrentViewModel = _service.GetRequiredService<T>();
 }
