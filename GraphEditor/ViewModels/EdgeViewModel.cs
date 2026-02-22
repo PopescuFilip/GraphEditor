@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using GraphEditor.Commands;
+using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace GraphEditor.ViewModels;
@@ -22,12 +24,26 @@ public class EdgeViewModel : ViewModelBase
 
     public Point LabelPosition => GetLabelPosition();
 
+    private bool _isSelected;
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set
+        {
+            _isSelected = value;
+            OnPropertyChanged(nameof(IsSelected));
+        }
+    }
+
+    public ICommand OnClick { get; }
+
     public EdgeViewModel(NodeViewModel startNode, NodeViewModel endNode)
     {
         StartNode = startNode;
         EndNode = endNode;
         Flow = new Random().Next(20);
         Capacity = new Random().Next(20);
+        OnClick = new RelayCommand(() => IsSelected = !IsSelected);
     }
 
     private Point GetLabelPosition()

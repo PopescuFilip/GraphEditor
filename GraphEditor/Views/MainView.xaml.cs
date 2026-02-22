@@ -12,7 +12,7 @@ namespace GraphEditor.Views;
 /// </summary>
 public partial class MainView : UserControl
 {
-    private MainViewModel _vm = null!;
+    private GraphViewModel _vm = null!;
 
     public MainView()
     {
@@ -21,7 +21,7 @@ public partial class MainView : UserControl
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
-        _vm = (DataContext as MainViewModel)!;
+        _vm = (DataContext as GraphViewModel)!;
     }
 
     private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

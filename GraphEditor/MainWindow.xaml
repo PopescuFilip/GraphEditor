@@ -13,11 +13,28 @@
     mc:Ignorable="d">
     <Grid>
         <Grid.Resources>
-            <DataTemplate DataType="{x:Type vms:MainViewModel}">
+            <DataTemplate DataType="{x:Type vms:GraphViewModel}">
                 <views:MainView />
             </DataTemplate>
         </Grid.Resources>
-
-        <ContentControl Content="{Binding CurrentViewModel}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="430" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Menu>
+                <MenuItem Header="File">
+                    <MenuItem Command="{Binding NewGraph}" Header="New Graph" />
+                    <MenuItem Command="{Binding Save}" Header="Save" />
+                    <MenuItem Command="{Binding Open}" Header="Open" />
+                </MenuItem>
+                <MenuItem Header="Edit">
+                    <MenuItem Command="{Binding Edges}" Header="Edges" />
+                </MenuItem>
+            </Menu>
+        </Grid>
+        <Grid Row="1">
+            <ContentControl Content="{Binding CurrentViewModel}" />
+        </Grid>
     </Grid>
 </Window>
