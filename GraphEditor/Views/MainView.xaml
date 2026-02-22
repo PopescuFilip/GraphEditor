@@ -16,6 +16,41 @@
         <conv:CenterOffsetConverter x:Key="CenterOffsetConverter" />
     </UserControl.Resources>
     <Grid Background="Transparent">
+        <ItemsControl IsHitTestVisible="False" ItemsSource="{Binding Edges}">
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Canvas.Left="0" Canvas.Top="0">
+                        <Path
+                            Data="{Binding PathGeometry}"
+                            Stroke="Black"
+                            StrokeThickness="2" />
+
+                        <Path Data="{Binding ArrowGeometry}" Fill="Black" />
+
+                        <TextBlock
+                            Padding="3"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Background="White"
+                            FontWeight="Bold"
+                            Text="{Binding FlowCapacity}">
+                            <TextBlock.RenderTransform>
+                                <TranslateTransform X="{Binding LabelPosition.X}" Y="{Binding LabelPosition.Y}" />
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+        </ItemsControl>
+
         <ItemsControl
             Background="Transparent"
             ItemsSource="{Binding Nodes}"
