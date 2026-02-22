@@ -25,16 +25,35 @@
             </i:Interaction.Triggers>
 
             <Ellipse
-            Fill="White"
-            Stroke="Black"
-            StrokeThickness="1" />
+                Width="{x:Static constants:UIConstants.NodeSize}"
+                Height="{x:Static constants:UIConstants.NodeSize}"
+                Fill="White">
+                <Ellipse.Style>
+                    <Style TargetType="Ellipse">
+
+                        <Setter Property="Stroke" Value="Black" />
+                        <Setter Property="StrokeThickness" Value="1" />
+
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsSelected}" Value="False">
+                                <Setter Property="Stroke" Value="Black" />
+                                <Setter Property="StrokeThickness" Value="1" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                <Setter Property="Stroke" Value="Red" />
+                                <Setter Property="StrokeThickness" Value="3" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Ellipse.Style>
+            </Ellipse>
 
 
             <TextBlock
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            FontWeight="Bold"
-            Text="{Binding Number}" />
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Bold"
+                Text="{Binding Number}" />
         </Grid>
     </Border>
 </UserControl>

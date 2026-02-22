@@ -1,5 +1,4 @@
 ﻿using GraphEditor.Commands;
-using GraphEditor.Models;
 using System.Windows;
 using System.Windows.Input;
 

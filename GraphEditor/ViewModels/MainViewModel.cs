@@ -19,6 +19,6 @@ public class MainViewModel : ViewModelBase
 
     public void OnNodeSelected(NodeViewModel nodeViewModel)
     {
-
+        nodeViewModel.IsSelected = !nodeViewModel.IsSelected;
     }
 }
