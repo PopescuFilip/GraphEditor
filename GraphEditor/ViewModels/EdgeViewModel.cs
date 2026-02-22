@@ -20,31 +20,25 @@ public class EdgeViewModel : ViewModelBase
     {
         get
         {
-            Point start = StartNode.Position;
-            Point end = EndNode.Position;
+            var start = StartNode.Position;
+            var end = EndNode.Position;
 
-            // 1. Calculate Midpoint
-            Point mid = new Point((start.X + end.X) / 2, (start.Y + end.Y) / 2);
+            var mid = new Point((start.X + end.X) / 2, (start.Y + end.Y) / 2);
 
-            // 2. Get Perpendicular Vector (the "Normal")
-            Vector direction = end - start;
+            var direction = end - start;
             if (direction.Length < 1) return new PathGeometry();
 
             direction.Normalize();
-            Vector normal = new Vector(-direction.Y, direction.X);
+            var normal = new Vector(-direction.Y, direction.X);
 
-            // 3. Offset the control point (e.g., 30 pixels out)
-            // This ensures A->B and B->A curve in opposite directions
             double curveOffset = 30;
-            Point controlPoint = new Point(mid.X + normal.X * curveOffset,
-                                           mid.Y + normal.Y * curveOffset);
+            var controlPoint = new Point(mid.X + normal.X * curveOffset, mid.Y + normal.Y * curveOffset);
 
-            // 4. Create the Bezier Figure
             var figure = new PathFigure { StartPoint = start, IsClosed = false };
             figure.Segments.Add(new QuadraticBezierSegment
             {
-                Point1 = controlPoint, // The "pull" point for the curve
-                Point2 = end,          // The destination
+                Point1 = controlPoint,
+                Point2 = end,
                 IsStroked = true
             });
 
@@ -56,24 +50,22 @@ public class EdgeViewModel : ViewModelBase
     {
         get
         {
-            Point start = StartNode.Position;
-            Point end = EndNode.Position;
+            var start = StartNode.Position;
+            var end = EndNode.Position;
 
-            // Re-calculate the same control point used in PathGeometry
-            Vector dir = end - start;
+            var dir = end - start;
             dir.Normalize();
-            Vector normal = new Vector(-dir.Y, dir.X);
-            Point mid = new Point((start.X + end.X) / 2, (start.Y + end.Y) / 2);
-            Point controlPoint = new Point(mid.X + normal.X * 30, mid.Y + normal.Y * 30);
+            var normal = new Vector(-dir.Y, dir.X);
+            var mid = new Point((start.X + end.X) / 2, (start.Y + end.Y) / 2);
+            var controlPoint = new Point(mid.X + normal.X * 30, mid.Y + normal.Y * 30);
 
-            // The tangent at the end of a Quadratic Bezier is the vector from ControlPoint to EndPoint
-            Vector tangent = end - controlPoint;
+            var tangent = end - controlPoint;
             tangent.Normalize();
-            Vector perp = new Vector(-tangent.Y, tangent.X);
+            var perp = new Vector(-tangent.Y, tangent.X);
 
-            Point tip = end;
-            Point left = tip - tangent * ArrowLength + perp * (ArrowWidth / 2);
-            Point right = tip - tangent * ArrowLength - perp * (ArrowWidth / 2);
+            var tip = end;
+            var left = tip - tangent * ArrowLength + perp * (ArrowWidth / 2);
+            var right = tip - tangent * ArrowLength - perp * (ArrowWidth / 2);
 
             var streamGeometry = new StreamGeometry();
             using (var ctx = streamGeometry.Open())
@@ -90,14 +82,12 @@ public class EdgeViewModel : ViewModelBase
     {
         get
         {
-            // Re-calculate the control point
-            Vector dir = EndNode.Position - StartNode.Position;
+            var dir = EndNode.Position - StartNode.Position;
             dir.Normalize();
-            Vector normal = new Vector(-dir.Y, dir.X);
-            Point mid = new Point((StartNode.Position.X + EndNode.Position.X) / 2,
+            var normal = new Vector(-dir.Y, dir.X);
+            var mid = new Point((StartNode.Position.X + EndNode.Position.X) / 2,
                                   (StartNode.Position.Y + EndNode.Position.Y) / 2);
 
-            // Position the label slightly further out than the curve peak
             double labelOffset = 45;
             return new Point(mid.X + normal.X * labelOffset,
                              mid.Y + normal.Y * labelOffset);

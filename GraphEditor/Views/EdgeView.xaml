@@ -4,28 +4,44 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:GraphEditor.Views"
+    xmlns:b="clr-namespace:GraphEditor.Behaviors"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid Canvas.Left="0" Canvas.Top="0">
-        <Path
-        Data="{Binding PathGeometry}"
-        Stroke="Black"
-        StrokeThickness="2" />
+    <Border>
 
-        <Path Data="{Binding ArrowGeometry}" Fill="Black" />
+        <i:Interaction.Behaviors>
+            <b:NoClickPropagationBehavior />
+        </i:Interaction.Behaviors>
 
-        <TextBlock
-        Padding="3"
-        HorizontalAlignment="Left"
-        VerticalAlignment="Top"
-        Background="White"
-        FontWeight="Bold"
-        Text="{Binding FlowCapacity}">
-            <TextBlock.RenderTransform>
-                <TranslateTransform X="{Binding LabelPosition.X}" Y="{Binding LabelPosition.Y}" />
-            </TextBlock.RenderTransform>
-        </TextBlock>
-    </Grid>
+        <Grid Canvas.Left="0" Canvas.Top="0">
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonDown">
+                    <i:InvokeCommandAction Command="{Binding OnClick}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
+            <Path
+                Data="{Binding PathGeometry}"
+                Stroke="Black"
+                StrokeThickness="2" />
+
+            <Path Data="{Binding ArrowGeometry}" Fill="Black" />
+
+            <TextBlock
+                Padding="3"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Background="White"
+                FontWeight="Bold"
+                Text="{Binding FlowCapacity}">
+                <TextBlock.RenderTransform>
+                    <TranslateTransform X="{Binding LabelPosition.X}" Y="{Binding LabelPosition.Y}" />
+                </TextBlock.RenderTransform>
+            </TextBlock>
+        </Grid>
+    </Border>
 </UserControl>
