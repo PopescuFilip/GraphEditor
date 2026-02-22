@@ -5,11 +5,19 @@
     xmlns:constants="clr-namespace:GraphEditor.Constants"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:GraphEditor.Views"
+    xmlns:b="clr-namespace:GraphEditor.Behaviors"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid Width="{x:Static constants:UIConstants.NodeSize}" Height="{x:Static constants:UIConstants.NodeSize}">
+    <Grid
+        Width="{x:Static constants:UIConstants.NodeSize}"
+        Height="{x:Static constants:UIConstants.NodeSize}"
+        MouseLeftButtonDown="Grid_MouseLeftButtonDown">
+        <i:Interaction.Behaviors>
+            <b:NoClickPropagationBehavior/>
+        </i:Interaction.Behaviors>
         <Ellipse
             Fill="White"
             Stroke="Black"
