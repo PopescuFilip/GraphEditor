@@ -1,6 +1,7 @@
 ﻿using GraphEditor.Models;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -8,7 +9,7 @@ namespace GraphEditor.Views;
 
 public class CanvasNodeView : Grid
 {
-    private const int NodeSize = 20;
+    private const int NodeSize = 30;
 
     private readonly Node _node;
 
@@ -39,5 +40,10 @@ public class CanvasNodeView : Grid
         Children.Add(text);
         Canvas.SetLeft(this, node.Position.X - NodeSize / 2);
         Canvas.SetTop(this, node.Position.Y - NodeSize / 2);
+    }
+
+    protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+    {
+        e.Handled = true;
     }
 }
