@@ -29,6 +29,7 @@ public partial class App : Application
                     DataContext = s.GetRequiredService<MainViewModel>()
                 })
             .AddSingleton<MainViewModel>()
+            .AddSingleton<GraphViewModel>()
             .BuildServiceProvider();
     }
 }
