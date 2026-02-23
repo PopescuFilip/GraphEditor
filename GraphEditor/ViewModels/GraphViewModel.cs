@@ -1,4 +1,5 @@
 ﻿using GraphEditor.Commands;
+using GraphEditor.Models;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -23,6 +24,29 @@ public class GraphViewModel : ViewModelBase
         AddNodeCommand = new AddNodeCommand(this);
         ClearSelection = new RelayCommand(ClearEdgesSelection);
         Delete = new RelayCommand(DeleteSelected);
+    }
+
+    public void InitializeFrom(Graph graph)
+    {
+        Edges.Clear();
+        Nodes.Clear();
+        foreach (var node in graph.Nodes)
+        {
+            var nodeVM = new NodeViewModel(node.Number, node.Position, OnNodeSelected);
+            Nodes.Add(nodeVM);
+        }
+        foreach (var edge in graph.Edges)
+        {
+            var startNode = Nodes.First(n => n.Number == edge.StartNode);
+            var endNode = Nodes.First(n => n.Number == edge.EndNode);
+
+            var edgeVM = new EdgeViewModel(startNode, endNode)
+            {
+                Flow = edge.Flow,
+                Capacity = edge.Capacity
+            };
+            Edges.Add(edgeVM);
+        }
     }
 
     public void OnNodeSelected(NodeViewModel clickedNode)
