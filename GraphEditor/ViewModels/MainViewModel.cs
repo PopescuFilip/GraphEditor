@@ -29,6 +29,7 @@ public class MainViewModel : ViewModelBase
     public ICommand Save { get; }
     public ICommand NewGraph { get; }
     public ICommand Open { get; }
+    public ICommand Delete { get; }
 
     public MainViewModel(IServiceProvider service)
     {
@@ -37,6 +38,7 @@ public class MainViewModel : ViewModelBase
         Save = new RelayCommand(SaveGraph);
         Open = new RelayCommand(OpenGraph);
         NewGraph = new RelayCommand(ClearGraph);
+        Delete = new RelayCommand(() => _service.GetRequiredService<GraphViewModel>().Delete.Execute(null));
     }
 
     private void OpenGraph()

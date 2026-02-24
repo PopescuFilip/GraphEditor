@@ -29,7 +29,7 @@
                     <MenuItem Command="{Binding Open}" Header="Open" />
                 </MenuItem>
                 <MenuItem Header="Edit">
-                    <MenuItem Command="{Binding EditEdges }" Header="Edges" />
+                    <MenuItem Command="{Binding Delete }" Header="Delete" />
                 </MenuItem>
             </Menu>
         </Grid>

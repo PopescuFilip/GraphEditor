@@ -1,6 +1,4 @@
-﻿using GraphEditor.Models;
-using GraphEditor.ViewModels;
-using System.Collections.Specialized;
+﻿using GraphEditor.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
