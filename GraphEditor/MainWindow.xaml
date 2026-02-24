@@ -23,12 +23,12 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Menu>
-                <MenuItem Header="File">
+                <MenuItem Header="File" Width="45">
                     <MenuItem Command="{Binding NewGraph}" Header="New Graph" />
                     <MenuItem Command="{Binding Save}" Header="Save" />
                     <MenuItem Command="{Binding Open}" Header="Open" />
                 </MenuItem>
-                <MenuItem Header="Edit">
+                <MenuItem Header="Edit" Width="45">
                     <MenuItem Command="{Binding Delete }" Header="Delete" />
                 </MenuItem>
             </Menu>
