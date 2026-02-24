@@ -1,3 +1,5 @@
-﻿namespace GraphEditor.Models;
+﻿using System.Collections.Immutable;
 
-public record Graph(List<Node> Nodes, List<Edge> Edges);
+namespace GraphEditor.Models;
+
+public record Graph(ImmutableArray<Node> Nodes, ImmutableArray<Edge> Edges);

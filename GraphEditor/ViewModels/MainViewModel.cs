@@ -4,9 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using System.IO;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace GraphEditor.ViewModels;
@@ -81,7 +79,7 @@ public class MainViewModel : ViewModelBase
         var nodes = graphVM.Nodes.Select(n => new Node(n.Number, n.Position));
         var edges = graphVM.Edges.Select(x => new Edge(x.StartNode.Number, x.EndNode.Number, x.Flow, x.Capacity));
 
-        var graph = new Graph(nodes.ToList(), edges.ToList());
+        var graph = new Graph([.. nodes], [.. edges]);
 
         var saveFileDialog = new SaveFileDialog()
         {
