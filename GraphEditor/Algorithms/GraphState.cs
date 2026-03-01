@@ -20,9 +20,10 @@ public record GraphState<T>(
 
     public GraphState<T> AddRange(IEnumerable<T> edges)
     {
-        var newEdges = Edges.AddRange(edges.Select(e => new KeyValuePair<(int, int), T>((e.StartNode, e.EndNode), e)));
+        var collectedEdges = edges.ToImmutableArray();
+        var newEdges = Edges.AddRange(collectedEdges.Select(e => new KeyValuePair<(int, int), T>((e.StartNode, e.EndNode), e)));
 
-        var newAdjacencyList = edges
+        var newAdjacencyList = collectedEdges
             .GroupBy(e => e.StartNode)
             .Select(g => new { StartNode = g.Key, EndNodes = g.Select(x => x.EndNode) })
             .Aggregate(AdjacencyList, (adjacencyList, edgeGrouping) =>
