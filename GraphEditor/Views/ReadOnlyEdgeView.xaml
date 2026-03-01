@@ -1,0 +1,49 @@
+﻿<UserControl
+    x:Class="GraphEditor.Views.ReadOnlyEdgeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:GraphEditor.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Border>
+        <Grid Canvas.Left="0" Canvas.Top="0">
+
+            <Path Data="{Binding PathGeometry}" StrokeThickness="2">
+                <Path.Style>
+                    <Style TargetType="Path">
+                        <Setter Property="Stroke" Value="Black" />
+                    </Style>
+                </Path.Style>
+            </Path>
+
+            <Path Data="{Binding ArrowGeometry}">
+                <Path.Style>
+                    <Style TargetType="Path">
+                        <Setter Property="Fill" Value="Black" />
+                    </Style>
+                </Path.Style>
+            </Path>
+
+            <TextBlock
+                Padding="3"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Background="White"
+                FontWeight="Bold"
+                Text="{Binding FlowCapacity}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontWeight" Value="Normal" />
+                        <Setter Property="Foreground" Value="Black" />
+                    </Style>
+                </TextBlock.Style>
+                <TextBlock.RenderTransform>
+                    <TranslateTransform X="{Binding LabelPosition.X}" Y="{Binding LabelPosition.Y}" />
+                </TextBlock.RenderTransform>
+            </TextBlock>
+        </Grid>
+    </Border>
+</UserControl>

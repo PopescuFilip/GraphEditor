@@ -15,7 +15,7 @@ public abstract class CommandBase : ICommand
 
     public abstract void Execute(object? parameter);
 
-    protected void OnCanExecutedChanged()
+    public void OnCanExecutedChanged()
     {
         CanExecuteChanged?.Invoke(this, new EventArgs());
     }

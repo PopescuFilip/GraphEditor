@@ -16,6 +16,9 @@
             <DataTemplate DataType="{x:Type vms:GraphViewModel}">
                 <views:MainView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type vms:ReadOnlyGraphViewModel}">
+                <views:ReadOnlyGraphView />
+            </DataTemplate>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -23,13 +26,16 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Menu>
-                <MenuItem Header="File" Width="45">
+                <MenuItem Width="45" Header="File">
                     <MenuItem Command="{Binding NewGraph}" Header="New Graph" />
                     <MenuItem Command="{Binding Save}" Header="Save" />
                     <MenuItem Command="{Binding Open}" Header="Open" />
                 </MenuItem>
-                <MenuItem Header="Edit" Width="45">
-                    <MenuItem Command="{Binding Delete }" Header="Delete" />
+                <MenuItem Width="45" Header="Edit">
+                    <MenuItem Command="{Binding Delete}" Header="Delete" />
+                </MenuItem>
+                <MenuItem Width="75" Header="Algorithms">
+                    <MenuItem Command="{Binding ExecuteGenericAlgorithm}" Header="Generic" />
                 </MenuItem>
             </Menu>
         </Grid>

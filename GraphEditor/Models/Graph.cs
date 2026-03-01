@@ -2,4 +2,4 @@
 
 namespace GraphEditor.Models;
 
-public record Graph(ImmutableArray<Node> Nodes, ImmutableArray<Edge> Edges);
+public record Graph(ImmutableArray<Node> Nodes, ImmutableArray<FlowEdge> Edges);

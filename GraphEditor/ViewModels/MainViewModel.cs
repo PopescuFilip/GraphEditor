@@ -1,7 +1,9 @@
-﻿using GraphEditor.Commands;
+﻿using GraphEditor.Algorithms;
+using GraphEditor.Commands;
 using GraphEditor.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
+using System.ComponentModel;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
@@ -24,19 +26,24 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    public ICommand Save { get; }
+    public RelayCommand Save { get; }
     public ICommand NewGraph { get; }
     public ICommand Open { get; }
-    public ICommand Delete { get; }
+    public RelayCommand Delete { get; }
+    public ICommand ExecuteGenericAlgorithm { get; }
 
     public MainViewModel(IServiceProvider service)
     {
         _service = service;
         CurrentViewModel = _service.GetRequiredService<GraphViewModel>();
-        Save = new RelayCommand(SaveGraph);
+        Save = new RelayCommand(SaveGraph, () => CurrentViewModel is GraphViewModel);
         Open = new RelayCommand(OpenGraph);
         NewGraph = new RelayCommand(ClearGraph);
-        Delete = new RelayCommand(() => _service.GetRequiredService<GraphViewModel>().Delete.Execute(null));
+        Delete = new RelayCommand(
+            () => _service.GetRequiredService<GraphViewModel>().Delete.Execute(null),
+            () => CurrentViewModel is GraphViewModel);
+        ExecuteGenericAlgorithm = new AlgorithmCommand(GetGraph, new GenericAlgorithm(), this);
+        PropertyChanged += CurrentViewModelChangedHandler;
     }
 
     private void OpenGraph()
@@ -61,25 +68,21 @@ public class MainViewModel : ViewModelBase
             return;
         }
 
-        var graphVM = _service.GetRequiredService<GraphViewModel>();
-        graphVM.InitializeFrom(graph);
+        Navigate<GraphViewModel>((x) => x.InitializeFrom(graph));
     }
 
     private void ClearGraph()
     {
-        var graphVM = _service.GetRequiredService<GraphViewModel>();
-        graphVM.Edges.Clear();
-        graphVM.Nodes.Clear();
+        Navigate<GraphViewModel>((x) =>
+        {
+            x.Edges.Clear();
+            x.Nodes.Clear();
+        });
     }
 
     private void SaveGraph()
     {
-        var graphVM = _service.GetRequiredService<GraphViewModel>();
-
-        var nodes = graphVM.Nodes.Select(n => new Node(n.Number, n.Position));
-        var edges = graphVM.Edges.Select(x => new Edge(x.StartNode.Number, x.EndNode.Number, x.Flow, x.Capacity));
-
-        var graph = new Graph([.. nodes], [.. edges]);
+        var graph = GetGraph();
 
         var saveFileDialog = new SaveFileDialog()
         {
@@ -96,11 +99,36 @@ public class MainViewModel : ViewModelBase
 
         var pathFile = saveFileDialog.FileName;
         var document = JsonSerializer.SerializeToDocument(graph);
-        using var sw = new FileStream(pathFile, FileMode.OpenOrCreate);
+        using var sw = new FileStream(pathFile, FileMode.Create);
         using var jsonWriter = new Utf8JsonWriter(sw);
         document.WriteTo(jsonWriter);
     }
 
-    public void Navigate<T>() where T : ViewModelBase =>
-        CurrentViewModel = _service.GetRequiredService<T>();
+    public void Navigate<T>(Action<T>? configure = null) where T : ViewModelBase
+    {
+        var newViewModel = _service.GetRequiredService<T>();
+        if (configure is not null)
+        {
+            configure(newViewModel);
+        }
+        CurrentViewModel = newViewModel;
+    }
+
+    private Graph GetGraph()
+    {
+        var graphVM = _service.GetRequiredService<GraphViewModel>();
+
+        var nodes = graphVM.Nodes.Select(n => new Node(n.Number, n.Position));
+        var edges = graphVM.Edges.Select(x => new FlowEdge(x.StartNode.Number, x.EndNode.Number, x.Flow, x.Capacity));
+        return new Graph([.. nodes], [.. edges]);
+    }
+
+    private void CurrentViewModelChangedHandler(object? _, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(CurrentViewModel))
+        {
+            Save.OnCanExecutedChanged();
+            Delete.OnCanExecutedChanged();
+        }
+    }
 }

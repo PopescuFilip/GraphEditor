@@ -24,8 +24,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
 
-            <Ellipse
-                Fill="White">
+            <Ellipse Fill="White">
                 <Ellipse.Style>
                     <Style TargetType="Ellipse">
 
