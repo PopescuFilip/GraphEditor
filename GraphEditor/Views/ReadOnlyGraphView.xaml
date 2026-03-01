@@ -14,60 +14,84 @@
         <conv:CenterOffsetConverter x:Key="CenterOffsetConverter" />
     </UserControl.Resources>
     <Grid Background="Transparent">
-        <Border BorderBrush="Black" BorderThickness="1">
-            <Grid>
-                <ItemsControl IsHitTestVisible="False" ItemsSource="{Binding Edges}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="200" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Border BorderBrush="Black" BorderThickness="1">
+                <Grid>
+                    <ItemsControl IsHitTestVisible="False" ItemsSource="{Binding Edges}">
 
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
 
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <local:ReadOnlyEdgeView />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <local:ReadOnlyEdgeView />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
 
-                </ItemsControl>
-                <ItemsControl Background="Transparent" ItemsSource="{Binding Nodes}">
+                    </ItemsControl>
+                    <ItemsControl Background="Transparent" ItemsSource="{Binding Nodes}">
 
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
 
-                    <ItemsControl.ItemContainerStyle>
-                        <Style>
-                            <Setter Property="Canvas.Left">
-                                <Setter.Value>
-                                    <MultiBinding Converter="{StaticResource CenterOffsetConverter}">
-                                        <Binding Path="Position.X" />
-                                        <Binding Source="{x:Static constants:UIConstants.NodeSize}" />
-                                    </MultiBinding>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter Property="Canvas.Top">
-                                <Setter.Value>
-                                    <MultiBinding Converter="{StaticResource CenterOffsetConverter}">
-                                        <Binding Path="Position.Y" />
-                                        <Binding Source="{x:Static constants:UIConstants.NodeSize}" />
-                                    </MultiBinding>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style>
+                                <Setter Property="Canvas.Left">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource CenterOffsetConverter}">
+                                            <Binding Path="Position.X" />
+                                            <Binding Source="{x:Static constants:UIConstants.NodeSize}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Canvas.Top">
+                                    <Setter.Value>
+                                        <MultiBinding Converter="{StaticResource CenterOffsetConverter}">
+                                            <Binding Path="Position.Y" />
+                                            <Binding Source="{x:Static constants:UIConstants.NodeSize}" />
+                                        </MultiBinding>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
 
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <local:ReadOnlyNodeView />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <local:ReadOnlyNodeView />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
 
-                </ItemsControl>
-            </Grid>
-        </Border>
+                    </ItemsControl>
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Border
+                Padding="12"
+                Background="#F5F5F5"
+                CornerRadius="6">
+                <StackPanel Margin="5,20,0,0">
+                    <TextBlock
+                        FontSize="14"
+                        Foreground="Gray"
+                        Text="Max Flow:" />
+
+                    <TextBlock
+                        FontSize="24"
+                        FontWeight="Bold"
+                        Text="{Binding MaxFlow}" />
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>
