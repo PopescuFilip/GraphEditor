@@ -33,7 +33,6 @@
                 </MenuItem>
                 <MenuItem Width="45" Header="Edit">
                     <MenuItem Command="{Binding Delete}" Header="Delete" />
-                    <MenuItem Command="{Binding EditCurrentGraph}" Header="Open in edit" />
                 </MenuItem>
                 <MenuItem Width="75" Header="Algorithms">
                     <MenuItem Command="{Binding ExecuteGenericAlgorithm}" Header="Generic" />

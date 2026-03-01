@@ -64,15 +64,16 @@ public class MainViewModel : ViewModelBase
             return;
         }
 
-        var graphVM = _service.GetRequiredService<GraphViewModel>();
-        graphVM.InitializeFrom(graph);
+        Navigate<GraphViewModel>((x) => x.InitializeFrom(graph));
     }
 
     private void ClearGraph()
     {
-        var graphVM = _service.GetRequiredService<GraphViewModel>();
-        graphVM.Edges.Clear();
-        graphVM.Nodes.Clear();
+        Navigate<GraphViewModel>((x) =>
+        {
+            x.Edges.Clear();
+            x.Nodes.Clear();
+        });
     }
 
     private void SaveGraph()
