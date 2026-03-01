@@ -3,6 +3,7 @@ using GraphEditor.Commands;
 using GraphEditor.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
+using System.ComponentModel;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
@@ -25,21 +26,24 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    public ICommand Save { get; }
+    public RelayCommand Save { get; }
     public ICommand NewGraph { get; }
     public ICommand Open { get; }
-    public ICommand Delete { get; }
+    public RelayCommand Delete { get; }
     public ICommand ExecuteGenericAlgorithm { get; }
 
     public MainViewModel(IServiceProvider service)
     {
         _service = service;
         CurrentViewModel = _service.GetRequiredService<GraphViewModel>();
-        Save = new RelayCommand(SaveGraph);
+        Save = new RelayCommand(SaveGraph, () => CurrentViewModel is GraphViewModel);
         Open = new RelayCommand(OpenGraph);
         NewGraph = new RelayCommand(ClearGraph);
-        Delete = new RelayCommand(() => _service.GetRequiredService<GraphViewModel>().Delete.Execute(null));
+        Delete = new RelayCommand(
+            () => _service.GetRequiredService<GraphViewModel>().Delete.Execute(null),
+            () => CurrentViewModel is GraphViewModel);
         ExecuteGenericAlgorithm = new AlgorithmCommand(GetGraph, new GenericAlgorithm(), this);
+        PropertyChanged += CurrentViewModelChangedHandler;
     }
 
     private void OpenGraph()
@@ -117,5 +121,14 @@ public class MainViewModel : ViewModelBase
         var nodes = graphVM.Nodes.Select(n => new Node(n.Number, n.Position));
         var edges = graphVM.Edges.Select(x => new FlowEdge(x.StartNode.Number, x.EndNode.Number, x.Flow, x.Capacity));
         return new Graph([.. nodes], [.. edges]);
+    }
+
+    private void CurrentViewModelChangedHandler(object? _, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(CurrentViewModel))
+        {
+            Save.OnCanExecutedChanged();
+            Delete.OnCanExecutedChanged();
+        }
     }
 }
