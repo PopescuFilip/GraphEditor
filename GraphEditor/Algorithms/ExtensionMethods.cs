@@ -14,4 +14,23 @@ public static class ExtensionMethods
             (list[i], list[j]) = (list[j], list[i]);
         }
     }
+
+    public static IEnumerable<(T, T)> SelectPairs<T>(this IEnumerable<T> values)
+    {
+        bool previousValueInitilized = false;
+        T? previousValue = default;
+
+        foreach (var value in values)
+        {
+            if (!previousValueInitilized)
+            {
+                previousValue = value;
+                previousValueInitilized = true;
+                continue;
+            }
+
+            yield return (previousValue!, value);
+            previousValue = value;
+        }
+    }
 }
