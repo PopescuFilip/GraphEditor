@@ -7,23 +7,23 @@ namespace GraphEditor.Algorithms;
 
 public class GenericAlgorithm
 {
-    public (int MaxFlux, Graph ResultingGraph) Run(Graph graph) =>
+    public (int MaxFlow, Graph ResultingGraph) Run(Graph graph) =>
         Run(graph, graph.Nodes.Min(x => x.Number), graph.Nodes.Max(x => x.Number), 0);
 
-    public (int MaxFlux, Graph ResultingGraph) Run(Graph graph, int startNode, int endNode, int initialFlow)
+    public (int MaxFlow, Graph ResultingGraph) Run(Graph graph, int startNode, int endNode, int initialFlow)
     {
-        var maxFlux = initialFlow;
+        var maxFlow = initialFlow;
         var graphState =  GraphState.CreateRange(graph.Edges);
         var residualGraph = graphState.ToResidual();
         while(TryFindWayToEndNode(residualGraph, startNode, endNode, out var wayToEndNode))
         {
-            var maxWayFlux = residualGraph.GetMinResidualValue(wayToEndNode);
-            maxFlux += maxWayFlux;
-            graphState = graphState.AddFlux(wayToEndNode);
+            var maxWayFlow = residualGraph.GetMinResidualValue(wayToEndNode);
+            maxFlow += maxWayFlow;
+            graphState = graphState.AddFlow(wayToEndNode, maxWayFlow);
             residualGraph = graphState.ToResidual();
         }
 
-        return (maxFlux, graph with { Edges = [.. graphState.GetEdges()] });
+        return (maxFlow, graph with { Edges = [.. graphState.GetEdges()] });
     }
 
     private bool TryFindWayToEndNode(GraphState<ResidualEdge> graphState, int startNode, int endNode, [NotNullWhen(true)]out Way? wayToEndNode)

@@ -1,12 +1,22 @@
 ﻿using GraphEditor.Models;
+using System.Collections.Immutable;
 
 namespace GraphEditor.Algorithms.Models;
 
 public static class FlowGraphExtensions
 {
-    public static GraphState<FlowEdge> AddFlux(this GraphState<FlowEdge> flowGraphState, Way way)
+    public static GraphState<FlowEdge> AddFlow(this GraphState<FlowEdge> flowGraphState, Way way, int flow)
     {
-        return null;
+        var newEdges = flowGraphState.Edges
+            .GroupBy(x => way.Edges.Contains(x.Key))
+            .Select(x => new { ShouldChange = x.Key, Edges = x.Select(y => y.Value) })
+            .Select(x => x.ShouldChange
+                ? x.Edges.Select(x => x with { Flow = x.Flow + flow })
+                : x.Edges)
+            .SelectMany(x => x)
+            .ToImmutableDictionary(x => (x.StartNode, x.EndNode), x => x);
+
+        return flowGraphState with { Edges = newEdges };
     }
 
     public static GraphState<ResidualEdge> ToResidual(this GraphState<FlowEdge> flowGraphState)

@@ -18,8 +18,6 @@ public record GraphState<T>(
         ImmutableDictionary.Create<int, ImmutableArray<int>>(),
         ImmutableDictionary.Create<(int, int), T>());
 
-    public T this[int startNode, int endNode] => Edges[(startNode, endNode)];
-
     public GraphState<T> AddRange(IEnumerable<T> edges)
     {
         var collectedEdges = edges.ToImmutableArray();
