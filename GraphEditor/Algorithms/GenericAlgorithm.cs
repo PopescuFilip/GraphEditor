@@ -1,5 +1,7 @@
-﻿using GraphEditor.Models;
+﻿using GraphEditor.Algorithms.Models;
+using GraphEditor.Models;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GraphEditor.Algorithms;
 
@@ -15,19 +17,18 @@ public class GenericAlgorithm
         var residualGraph = graphState.ToResidual();
         while(TryFindWayToEndNode(residualGraph, startNode, endNode, out var wayToEndNode))
         {
-            var way = wayToEndNode.SelectPairs().ToImmutableArray();
-            var maxWayFlux = residualGraph.GetMinResidualValue(way);
+            var maxWayFlux = residualGraph.GetMinResidualValue(wayToEndNode);
             maxFlux += maxWayFlux;
-            graphState = graphState.AddFlux(way);
+            graphState = graphState.AddFlux(wayToEndNode);
             residualGraph = graphState.ToResidual();
         }
 
         return (maxFlux, graph with { Edges = [.. graphState.GetEdges()] });
     }
 
-    private bool TryFindWayToEndNode(GraphState<ResidualEdge> graphState, int startNode, int endNode, out ImmutableArray<int> wayToEndNode)
+    private bool TryFindWayToEndNode(GraphState<ResidualEdge> graphState, int startNode, int endNode, [NotNullWhen(true)]out Way? wayToEndNode)
     {
-        wayToEndNode = [];
+        wayToEndNode = null;
 
         var nodesToVisit = new List<int>() { startNode };
         var visitedNodes = new List<int>();
@@ -71,7 +72,7 @@ public class GenericAlgorithm
 
         way.Add(current);
         way.Reverse();
-        wayToEndNode = [.. way];
+        wayToEndNode = new Way([.. way.SelectPairs()]);
         return true;
     }
 }

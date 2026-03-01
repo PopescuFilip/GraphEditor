@@ -1,12 +1,12 @@
 ﻿using GraphEditor.Models;
 
-namespace GraphEditor.Algorithms;
+namespace GraphEditor.Algorithms.Models;
 
 public static class FlowGraphExtensions
 {
-    public GraphState<FlowEdge> AddFlux(this GraphState<FlowEdge> flowGraphState, IEnumerable<(int, int)> way)
+    public static GraphState<FlowEdge> AddFlux(this GraphState<FlowEdge> flowGraphState, Way way)
     {
-
+        return null;
     }
 
     public static GraphState<ResidualEdge> ToResidual(this GraphState<FlowEdge> flowGraphState)

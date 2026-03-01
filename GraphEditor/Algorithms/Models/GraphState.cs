@@ -1,7 +1,7 @@
 ﻿using GraphEditor.Models;
 using System.Collections.Immutable;
 
-namespace GraphEditor.Algorithms;
+namespace GraphEditor.Algorithms.Models;
 
 public static class GraphState
 {
@@ -17,6 +17,8 @@ public record GraphState<T>(
     public static readonly GraphState<T> Empty = new(
         ImmutableDictionary.Create<int, ImmutableArray<int>>(),
         ImmutableDictionary.Create<(int, int), T>());
+
+    public T this[int startNode, int endNode] => Edges[(startNode, endNode)];
 
     public GraphState<T> AddRange(IEnumerable<T> edges)
     {
