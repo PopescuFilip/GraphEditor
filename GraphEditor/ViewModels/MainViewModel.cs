@@ -77,7 +77,7 @@ public class MainViewModel : ViewModelBase
         var graphVM = _service.GetRequiredService<GraphViewModel>();
 
         var nodes = graphVM.Nodes.Select(n => new Node(n.Number, n.Position));
-        var edges = graphVM.Edges.Select(x => new Edge(x.StartNode.Number, x.EndNode.Number, x.Flow, x.Capacity));
+        var edges = graphVM.Edges.Select(x => new FlowEdge(x.StartNode.Number, x.EndNode.Number, x.Flow, x.Capacity));
 
         var graph = new Graph([.. nodes], [.. edges]);
 
