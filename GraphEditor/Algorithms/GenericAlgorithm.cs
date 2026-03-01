@@ -1,6 +1,5 @@
 ﻿using GraphEditor.Algorithms.Models;
 using GraphEditor.Models;
-using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
 namespace GraphEditor.Algorithms;

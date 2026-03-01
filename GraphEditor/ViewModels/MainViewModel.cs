@@ -39,7 +39,7 @@ public class MainViewModel : ViewModelBase
         Open = new RelayCommand(OpenGraph);
         NewGraph = new RelayCommand(ClearGraph);
         Delete = new RelayCommand(() => _service.GetRequiredService<GraphViewModel>().Delete.Execute(null));
-        ExecuteGenericAlgorithm = new AlgorithmCommand(GetGraph, new GenericAlgorithm());
+        ExecuteGenericAlgorithm = new AlgorithmCommand(GetGraph, new GenericAlgorithm(), this);
     }
 
     private void OpenGraph()
@@ -99,8 +99,15 @@ public class MainViewModel : ViewModelBase
         document.WriteTo(jsonWriter);
     }
 
-    public void Navigate<T>() where T : ViewModelBase =>
-        CurrentViewModel = _service.GetRequiredService<T>();
+    public void Navigate<T>(Action<T>? configure = null) where T : ViewModelBase
+    {
+        var newViewModel = _service.GetRequiredService<T>();
+        if (configure is not null)
+        {
+            configure(newViewModel);
+        }
+        CurrentViewModel = newViewModel;
+    }
 
     private Graph GetGraph()
     {
