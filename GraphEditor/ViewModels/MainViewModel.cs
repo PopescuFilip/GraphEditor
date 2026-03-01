@@ -1,4 +1,5 @@
-﻿using GraphEditor.Commands;
+﻿using GraphEditor.Algorithms;
+using GraphEditor.Commands;
 using GraphEditor.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
@@ -28,6 +29,7 @@ public class MainViewModel : ViewModelBase
     public ICommand NewGraph { get; }
     public ICommand Open { get; }
     public ICommand Delete { get; }
+    public ICommand ExecuteGenericAlgorithm { get; }
 
     public MainViewModel(IServiceProvider service)
     {
@@ -37,6 +39,7 @@ public class MainViewModel : ViewModelBase
         Open = new RelayCommand(OpenGraph);
         NewGraph = new RelayCommand(ClearGraph);
         Delete = new RelayCommand(() => _service.GetRequiredService<GraphViewModel>().Delete.Execute(null));
+        ExecuteGenericAlgorithm = new AlgorithmCommand(GetGraph, new GenericAlgorithm());
     }
 
     private void OpenGraph()
@@ -74,12 +77,7 @@ public class MainViewModel : ViewModelBase
 
     private void SaveGraph()
     {
-        var graphVM = _service.GetRequiredService<GraphViewModel>();
-
-        var nodes = graphVM.Nodes.Select(n => new Node(n.Number, n.Position));
-        var edges = graphVM.Edges.Select(x => new FlowEdge(x.StartNode.Number, x.EndNode.Number, x.Flow, x.Capacity));
-
-        var graph = new Graph([.. nodes], [.. edges]);
+        var graph = GetGraph();
 
         var saveFileDialog = new SaveFileDialog()
         {
@@ -96,11 +94,20 @@ public class MainViewModel : ViewModelBase
 
         var pathFile = saveFileDialog.FileName;
         var document = JsonSerializer.SerializeToDocument(graph);
-        using var sw = new FileStream(pathFile, FileMode.OpenOrCreate);
+        using var sw = new FileStream(pathFile, FileMode.Create);
         using var jsonWriter = new Utf8JsonWriter(sw);
         document.WriteTo(jsonWriter);
     }
 
     public void Navigate<T>() where T : ViewModelBase =>
         CurrentViewModel = _service.GetRequiredService<T>();
+
+    private Graph GetGraph()
+    {
+        var graphVM = _service.GetRequiredService<GraphViewModel>();
+
+        var nodes = graphVM.Nodes.Select(n => new Node(n.Number, n.Position));
+        var edges = graphVM.Edges.Select(x => new FlowEdge(x.StartNode.Number, x.EndNode.Number, x.Flow, x.Capacity));
+        return new Graph([.. nodes], [.. edges]);
+    }
 }

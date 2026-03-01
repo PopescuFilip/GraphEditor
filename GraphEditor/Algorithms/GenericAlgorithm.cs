@@ -9,9 +9,9 @@ public class GenericAlgorithm
 
     public (int MaxFlux, Graph ResultingGraph) Run(Graph graph, int startNode, int endNode, int initialFlow)
     {
-        var adjacencyList =  GraphState.CreateRange(graph.Edges);
+        var graphState =  GraphState.CreateRange(graph.Edges);
+        var residualGraph = graphState.ToResidual();
 
-
-        return (0, graph with { Edges = [.. adjacencyList.GetEdges()] });
+        return (0, graph with { Edges = [.. graphState.GetEdges()] });
     }
 }
