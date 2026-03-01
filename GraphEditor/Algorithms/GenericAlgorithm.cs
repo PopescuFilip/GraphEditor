@@ -60,19 +60,8 @@ public class GenericAlgorithm
         if (!parents.ContainsKey(endNode))
             return false;
 
-        var way = new List<int>();
-        var current = endNode;
-        while (parents.TryGetValue(current, out var nextNode))
-        {
-            way.Add(current);
-            current = nextNode;
-        }
-        if (current != startNode)
-            return false;
-
-        way.Add(current);
-        way.Reverse();
-        wayToEndNode = new Way([.. way.SelectPairs()]);
+        var edges = parents.SelectStartingWith(endNode).Reverse().SelectPairs();
+        wayToEndNode = new Way([.. edges]);
         return true;
     }
 }

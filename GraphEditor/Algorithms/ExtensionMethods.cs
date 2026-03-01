@@ -15,6 +15,18 @@ public static class ExtensionMethods
         }
     }
 
+    public static IEnumerable<T> SelectStartingWith<T>(this IReadOnlyDictionary<T, T> parents, T start)
+    {
+        var current = start;
+        while (parents.TryGetValue(current, out var next))
+        {
+            yield return current;
+            current = next;
+        }
+
+        yield return current;
+    }
+
     public static IEnumerable<(T, T)> SelectPairs<T>(this IEnumerable<T> values)
     {
         bool previousValueInitilized = false;
