@@ -36,6 +36,7 @@
                 </MenuItem>
                 <MenuItem Width="75" Header="Algorithms">
                     <MenuItem Command="{Binding ExecuteGenericAlgorithm}" Header="Generic" />
+                    <MenuItem Command="{Binding ExecuteFordFulkersonAlgorithm}" Header="FordFulkerson" />
                 </MenuItem>
             </Menu>
         </Grid>

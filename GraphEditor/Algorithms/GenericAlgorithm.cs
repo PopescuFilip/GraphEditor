@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace GraphEditor.Algorithms;
 
-public class GenericAlgorithm
+public class GenericAlgorithm : IAlgorithm
 {
     public (int MaxFlow, Graph ResultingGraph) Run(Graph graph) =>
         Run(graph, graph.Nodes.Min(x => x.Number), graph.Nodes.Max(x => x.Number), 0);

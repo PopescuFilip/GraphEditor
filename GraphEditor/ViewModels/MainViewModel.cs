@@ -31,6 +31,7 @@ public class MainViewModel : ViewModelBase
     public ICommand Open { get; }
     public RelayCommand Delete { get; }
     public ICommand ExecuteGenericAlgorithm { get; }
+    public ICommand ExecuteFordFulkersonAlgorithm { get; }
 
     public MainViewModel(IServiceProvider service)
     {
@@ -43,6 +44,7 @@ public class MainViewModel : ViewModelBase
             () => _service.GetRequiredService<GraphViewModel>().Delete.Execute(null),
             () => CurrentViewModel is GraphViewModel);
         ExecuteGenericAlgorithm = new AlgorithmCommand(GetGraph, new GenericAlgorithm(), this);
+        ExecuteFordFulkersonAlgorithm = new AlgorithmCommand(GetGraph, new FordFulkersonAlgorithm(), this);
         PropertyChanged += CurrentViewModelChangedHandler;
     }
 

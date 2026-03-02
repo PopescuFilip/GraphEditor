@@ -4,12 +4,12 @@ using GraphEditor.ViewModels;
 
 namespace GraphEditor.Commands;
 
-public class AlgorithmCommand(Func<Graph> _getGraph, GenericAlgorithm _genericAlgorithm, MainViewModel _vm) : CommandBase
+public class AlgorithmCommand(Func<Graph> _getGraph, IAlgorithm _algorithm, MainViewModel _vm) : CommandBase
 {
     public override void Execute(object? parameter)
     {
         var graph = _getGraph();
-        var output = _genericAlgorithm.Run(graph);
+        var output = _algorithm.Run(graph);
         _vm.Navigate<ReadOnlyGraphViewModel>((graphVM) => Configure(graphVM, output));
     }
 
