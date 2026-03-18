@@ -1,10 +1,32 @@
 ﻿using GraphEditor.Models;
 using System.Collections.Immutable;
+using KvpFlowEdge = System.Collections.Generic.KeyValuePair<(int, int), GraphEditor.Models.FlowEdge>;
 
 namespace GraphEditor.Algorithms.Models;
 
 public static class FlowGraphExtensions
 {
+    public static GraphState<FlowEdge> FixFlow(this GraphState<FlowEdge> flowGraphState)
+    {
+        var overflowedEdges = flowGraphState.Edges
+            .Where(x => x.Value.Flow > x.Value.Capacity)
+            .ToImmutableDictionary(x => x.Key, x => x.Value);
+
+        if (overflowedEdges.Count == 0)
+            return flowGraphState;
+
+        var newEdges = flowGraphState.Edges
+            .GroupBy(x => overflowedEdges.ContainsKey(x.Key) || overflowedEdges.ContainsKey(x.Key.Swap()))
+            .Select(x => new { ShouldChange = x.Key, Edges = x.Select(y => y) })
+            .Select(x => x.ShouldChange
+                ? x.Edges.SelectFixedEdges()
+                : x.Edges)
+            .SelectMany(x => x)
+            .ToImmutableDictionary();
+
+        return flowGraphState with { Edges = newEdges };
+    }
+
     public static GraphState<FlowEdge> AddFlow(this GraphState<FlowEdge> flowGraphState, Way way, int flow)
     {
         var newEdges = flowGraphState.Edges
@@ -62,4 +84,18 @@ public static class FlowGraphExtensions
 
         return capacity - flow + inverseFlow;
     }
+
+    private static IEnumerable<KvpFlowEdge> SelectFixedEdges(this IEnumerable<KvpFlowEdge> flowEdges) =>
+        flowEdges
+            .GroupBy(x => x.Key, GraphUtilities.OrderInsensitiveTupleComparer)
+            .SelectMany(x => x.SelectPairs().First().ToFixedPair().ToEnumerable());
+
+    private static (KvpFlowEdge, KvpFlowEdge) ToFixedPair(this (KvpFlowEdge, KvpFlowEdge) pair) => pair switch
+    {
+        (var a, var b) when a.Value.Capacity < a.Value.Flow => (
+        KeyValuePair.Create(a.Key, a.Value with { Flow = a.Value.Flow - b.Value.Flow }),
+        KeyValuePair.Create(b.Key, b.Value with { Flow = 0 })),
+        (var a, var b) when b.Value.Capacity < b.Value.Flow => pair.Swap().ToFixedPair(),
+        _ => throw new InvalidOperationException()
+    };
 }

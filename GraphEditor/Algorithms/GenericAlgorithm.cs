@@ -18,7 +18,7 @@ public class GenericAlgorithm : IAlgorithm
         {
             var maxWayFlow = residualGraph.GetMinResidualValue(wayToEndNode);
             maxFlow += maxWayFlow;
-            graphState = graphState.AddFlow(wayToEndNode, maxWayFlow);
+            graphState = graphState.AddFlow(wayToEndNode, maxWayFlow).FixFlow();
             residualGraph = graphState.ToResidual();
         }
 
