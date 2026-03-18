@@ -9,9 +9,7 @@ public class RelayCommand(Action _execute, Func<bool>? _canExecute = null) : Com
     public override bool CanExecute(object? parameter) => _canExecute?.Invoke() ?? true;
 }
 
-public class RelayCommand<T>(Action<T> _execute, T _argument) : CommandBase
+public class RelayCommand<T>(Action<T> _execute) : CommandBase<T>
 {
-    public override void Execute(object? _) => _execute(_argument);
-
-    public override bool CanExecute(object? parameter) => true;
+    public override void Execute(T parameter) => _execute(parameter);
 }

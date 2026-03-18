@@ -2,15 +2,15 @@
 
 public static class ExtensionMethods
 {
-    public static (int, int) Swap(this (int, int) value) => (value.Item2, value.Item1);
+    public static (T, T) Swap<T>(this (T, T) value) => (value.Item2, value.Item1);
 
     public static void Shuffle<T>(this List<T> list)
     {
         var random = new Random();
 
-        for (int i = list.Count - 1; i > 0; i--)
+        for (var i = list.Count - 1; i > 0; i--)
         {
-            int j = random.Next(i + 1);
+            var j = random.Next(i + 1);
             (list[i], list[j]) = (list[j], list[i]);
         }
     }
@@ -29,7 +29,7 @@ public static class ExtensionMethods
 
     public static IEnumerable<(T, T)> SelectPairs<T>(this IEnumerable<T> values)
     {
-        bool previousValueInitilized = false;
+        var previousValueInitilized = false;
         T? previousValue = default;
 
         foreach (var value in values)
@@ -44,5 +44,11 @@ public static class ExtensionMethods
             yield return (previousValue!, value);
             previousValue = value;
         }
+    }
+
+    public static IEnumerable<T> ToEnumerable<T>(this (T, T) tuple)
+    {
+        yield return tuple.Item1;
+        yield return tuple.Item2;
     }
 }

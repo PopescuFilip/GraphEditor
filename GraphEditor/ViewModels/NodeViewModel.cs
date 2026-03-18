@@ -34,7 +34,7 @@ public class NodeViewModel : ViewModelBase
 
     public NodeViewModel(int number, Point position, Action<NodeViewModel> onClick)
     {
-        OnClick = new RelayCommand<NodeViewModel>(onClick, this);
+        OnClick = new RelayCommand(() => onClick(this));
         Number = number;
         Position = position;
     }
