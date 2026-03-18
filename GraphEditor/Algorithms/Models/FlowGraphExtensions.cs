@@ -95,7 +95,7 @@ public static class FlowGraphExtensions
         (var a, var b) when a.Value.Capacity < a.Value.Flow => (
         KeyValuePair.Create(a.Key, a.Value with { Flow = a.Value.Flow - b.Value.Flow }),
         KeyValuePair.Create(b.Key, b.Value with { Flow = 0 })),
-        (var a, var b) when b.Value.Capacity < b.Value.Flow => pair.Swap().ToFixedPair(),
+        (var _, var b) when b.Value.Capacity < b.Value.Flow => pair.Swap().ToFixedPair(),
         _ => throw new InvalidOperationException()
     };
 }
