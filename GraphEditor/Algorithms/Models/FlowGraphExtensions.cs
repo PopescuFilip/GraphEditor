@@ -6,7 +6,21 @@ namespace GraphEditor.Algorithms.Models;
 
 public static class FlowGraphExtensions
 {
-    public static GraphState<FlowEdge> FixFlow(this GraphState<FlowEdge> flowGraphState)
+    public static GraphState<FlowEdge> AddFlow(this GraphState<FlowEdge> flowGraphState, Way way, int flow)
+    {
+        var newEdges = flowGraphState.Edges
+            .GroupBy(x => way.Edges.Contains(x.Key))
+            .Select(x => new { ShouldChange = x.Key, Edges = x.Select(y => y.Value) })
+            .Select(x => x.ShouldChange
+                ? x.Edges.Select(x => x with { Flow = x.Flow + flow })
+                : x.Edges)
+            .SelectMany(x => x)
+            .ToImmutableDictionary(x => (x.StartNode, x.EndNode), x => x);
+
+        return (flowGraphState with { Edges = newEdges }).FixFlow();
+    }
+
+    private static GraphState<FlowEdge> FixFlow(this GraphState<FlowEdge> flowGraphState)
     {
         var overflowedEdges = flowGraphState.Edges
             .Where(x => x.Value.Flow > x.Value.Capacity)
@@ -23,20 +37,6 @@ public static class FlowGraphExtensions
                 : x.Edges)
             .SelectMany(x => x)
             .ToImmutableDictionary();
-
-        return flowGraphState with { Edges = newEdges };
-    }
-
-    public static GraphState<FlowEdge> AddFlow(this GraphState<FlowEdge> flowGraphState, Way way, int flow)
-    {
-        var newEdges = flowGraphState.Edges
-            .GroupBy(x => way.Edges.Contains(x.Key))
-            .Select(x => new { ShouldChange = x.Key, Edges = x.Select(y => y.Value) })
-            .Select(x => x.ShouldChange
-                ? x.Edges.Select(x => x with { Flow = x.Flow + flow })
-                : x.Edges)
-            .SelectMany(x => x)
-            .ToImmutableDictionary(x => (x.StartNode, x.EndNode), x => x);
 
         return flowGraphState with { Edges = newEdges };
     }
