@@ -18,7 +18,9 @@ public class AlgorithmCommand(
 
         graphStore.Graphs.Clear();
         var output = algorithm.Run(graph, (graph => graphStore.Graphs.Add(graph)));
-        navigationCommand.Execute((graphVM) => Configure(graphVM, output));
+
+        navigationCommand.Configure = (graphVM) => Configure(graphVM, output);
+        navigationCommand.Execute();
     }
 
     private static void Configure(ReadOnlyGraphViewModel graphViewModel, (int MaxFlow, Graph ResultingGraph) algorithmOutput)

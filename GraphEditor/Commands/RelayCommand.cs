@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace GraphEditor.Commands;
+﻿namespace GraphEditor.Commands;
 
 public class RelayCommand(Action _execute, Func<bool>? _canExecute = null) : CommandBase
 {

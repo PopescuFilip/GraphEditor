@@ -33,6 +33,7 @@ public class MainViewModel : ViewModelBase
     public RelayCommand Delete { get; }
     public ICommand ExecuteGenericAlgorithm { get; }
     public ICommand ExecuteFordFulkersonAlgorithm { get; }
+    public ICommand ViewHistory { get; }
 
     public MainViewModel(IServiceProvider service, ResidualGraphStore graphStore)
     {
@@ -44,6 +45,10 @@ public class MainViewModel : ViewModelBase
         Delete = new RelayCommand(
             () => _service.GetRequiredService<GraphViewModel>().Delete.Execute(null),
             () => CurrentViewModel is GraphViewModel);
+        ViewHistory = new NavigationCommand<GraphHistoryViewModel>(this)
+        {
+            Configure = (g) => g.Reset()
+        };
 
         var navigateCommand = new NavigationCommand<ReadOnlyGraphViewModel>(this);
         ExecuteGenericAlgorithm = new AlgorithmCommand(GetGraph, new GenericAlgorithm(), navigateCommand, graphStore);

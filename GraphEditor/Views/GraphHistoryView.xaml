@@ -82,8 +82,8 @@
                 CornerRadius="6">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="30" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="40" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -95,8 +95,7 @@
                         Grid.Column="0"
                         Margin="5"
                         Content="Previous"
-                        FontSize="14"
-                        Foreground="Gray"
+                        FontSize="13"
                         Command="{Binding PreviousCommand}" />
 
                     <Button
@@ -104,8 +103,7 @@
                         Grid.Column="1"
                         Margin="5"
                         Content="Next"
-                        FontSize="14"
-                        Foreground="Gray"
+                        FontSize="13"
                         Command="{Binding NextCommand}"/>
                 </Grid>
             </Border>
