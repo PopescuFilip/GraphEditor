@@ -24,7 +24,7 @@ public class ReadOnlyGraphViewModel : ViewModelBase
             var startNode = Nodes.First(n => n.Number == edge.StartNode);
             var endNode = Nodes.First(n => n.Number == edge.EndNode);
 
-            var edgeVM = new ReadOnlyEdgeViewModel(startNode, endNode, edge.Flow, edge.Capacity);
+            var edgeVM = new ReadOnlyEdgeViewModel(startNode, endNode, $"{edge.Flow}/{edge.Capacity}");
             Edges.Add(edgeVM);
         }
     }

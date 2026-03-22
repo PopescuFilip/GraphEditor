@@ -5,16 +5,12 @@ using System.Windows.Media;
 
 namespace GraphEditor.ViewModels;
 
-public class ReadOnlyEdgeViewModel(Node startNode, Node endNode, int flow, int capacity) : ViewModelBase
+public class ReadOnlyEdgeViewModel(Node startNode, Node endNode, string label) : ViewModelBase
 {
     public Node StartNode { get; } = startNode;
     public Node EndNode { get; } = endNode;
 
-    public int Flow { get; } = flow;
-
-    public int Capacity { get; } = capacity;
-
-    public string FlowCapacity => $"{Flow}/{Capacity}";
+    public string Label => label;
 
     public string EdgeName => $"{StartNode.Number} -> {EndNode.Number}";
 
