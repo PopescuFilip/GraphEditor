@@ -34,6 +34,7 @@ public class MainViewModel : ViewModelBase
     public ICommand ExecuteGenericAlgorithm { get; }
     public ICommand ExecuteFordFulkersonAlgorithm { get; }
     public ICommand ExecuteEdmondsKarpAlgorithm { get; }
+    public ICommand ExecuteAhujaOrlinAlgorithm { get; }
     public ICommand ViewHistory { get; }
 
     public MainViewModel(IServiceProvider service, ResidualGraphStore graphStore)
@@ -52,6 +53,7 @@ public class MainViewModel : ViewModelBase
         ExecuteGenericAlgorithm = new AlgorithmCommand(GetGraph, new GenericAlgorithm(), navigateCommand, graphStore);
         ExecuteFordFulkersonAlgorithm = new AlgorithmCommand(GetGraph, new FordFulkersonAlgorithm(), navigateCommand, graphStore);
         ExecuteEdmondsKarpAlgorithm = new AlgorithmCommand(GetGraph, new EdmondsKarpAlgorithm(), navigateCommand, graphStore);
+        ExecuteAhujaOrlinAlgorithm = new AlgorithmCommand(GetGraph, new AhujaOrlinAlgorithm(), navigateCommand, graphStore);
         PropertyChanged += CurrentViewModelChangedHandler;
     }
 

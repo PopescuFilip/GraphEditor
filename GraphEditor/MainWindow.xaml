@@ -41,6 +41,7 @@
                     <MenuItem Command="{Binding ExecuteGenericAlgorithm}" Header="Generic" />
                     <MenuItem Command="{Binding ExecuteFordFulkersonAlgorithm}" Header="FordFulkerson" />
                     <MenuItem Command="{Binding ExecuteEdmondsKarpAlgorithm}" Header="EdmondsKarp" />
+                    <MenuItem Command="{Binding ExecuteAhujaOrlinAlgorithm}" Header="Ahuja-Orlin" />
                 </MenuItem>
                 <MenuItem Width="45" Header="View">
                     <MenuItem Command="{Binding ViewHistory}" Header="Residual" />
