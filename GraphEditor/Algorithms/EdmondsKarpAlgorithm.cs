@@ -33,15 +33,15 @@ public class EdmondsKarpAlgorithm : IAlgorithm
     {
         wayToEndNode = null;
 
-        var nodesToVisit = new List<int>() { startNode };
+        var nodesToVisit = new Queue<int>();
+        nodesToVisit.Enqueue(startNode);
         var visitedNodes = new List<int>();
         var parents = new Dictionary<int, int>();
 
         while (nodesToVisit.Count != 0)
         {
-            var currentNode = nodesToVisit[0];
+            var currentNode = nodesToVisit.Dequeue();
             visitedNodes.Add(currentNode);
-            nodesToVisit.RemoveAt(0);
 
             if (!graphState.AdjacencyList.TryGetValue(currentNode, out var adjacentNodes))
                 continue;
@@ -51,12 +51,12 @@ public class EdmondsKarpAlgorithm : IAlgorithm
                 .ToList();
             if (undiscoveredNodes.Count != 0)
             {
+                undiscoveredNodes.Sort();
                 foreach (var undiscoveredNode in undiscoveredNodes)
                 {
                     parents[undiscoveredNode] = currentNode;
+                    nodesToVisit.Enqueue(undiscoveredNode);
                 }
-                undiscoveredNodes.Shuffle();
-                nodesToVisit.AddRange(undiscoveredNodes);
             }
         }
 
