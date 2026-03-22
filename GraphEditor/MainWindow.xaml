@@ -37,9 +37,10 @@
                 <MenuItem Width="45" Header="Edit">
                     <MenuItem Command="{Binding Delete}" Header="Delete" />
                 </MenuItem>
-                <MenuItem Width="75" Header="Algorithms">
+                <MenuItem Width="85" Header="Algorithms">
                     <MenuItem Command="{Binding ExecuteGenericAlgorithm}" Header="Generic" />
                     <MenuItem Command="{Binding ExecuteFordFulkersonAlgorithm}" Header="FordFulkerson" />
+                    <MenuItem Command="{Binding ExecuteEdmondsKarpAlgorithm}" Header="EdmondsKarp" />
                 </MenuItem>
                 <MenuItem Width="45" Header="View">
                     <MenuItem Command="{Binding ViewHistory}" Header="Residual" />
