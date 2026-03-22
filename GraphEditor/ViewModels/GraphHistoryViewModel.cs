@@ -43,7 +43,7 @@ public class GraphHistoryViewModel : ViewModelBase
         PropertyChanged += CurrentIndexHandler;
     }
 
-    public void Reset() => CurrentIndex = _graphStore.Graphs.Count - 1;
+    public void Reset() => CurrentIndex = 0;
 
     private void Update()
     {
