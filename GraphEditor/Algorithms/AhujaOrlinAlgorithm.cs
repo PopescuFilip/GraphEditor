@@ -17,13 +17,25 @@ public class AhujaOrlinAlgorithm : IAlgorithm
         var residualGraph = graphState.ToResidual();
         onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
 
-        while (TryFindWayToEndNode(residualGraph, startNode, endNode, out var wayToEndNode))
+        var maxResidual = residualGraph.Edges.Values.Select(x => x.ResidualValue).Max();
+        var maxPowerOfTwo = MathUtilities.GetMaxPowerOfTwoLessThan(maxResidual);
+
+        while (maxPowerOfTwo != 0)
         {
-            var maxWayFlow = residualGraph.GetMinResidualValue(wayToEndNode);
-            maxFlow += maxWayFlow;
-            graphState = graphState.AddFlow(wayToEndNode, maxWayFlow);
-            residualGraph = graphState.ToResidual();
-            onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
+            var minResidualGraph = residualGraph.ToMinResidual(maxPowerOfTwo);
+            onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. minResidualGraph.Edges.Values]));
+
+            while (TryFindWayToEndNode(minResidualGraph, startNode, endNode, out var wayToEndNode))
+            {
+                var maxWayFlow = residualGraph.GetMinResidualValue(wayToEndNode);
+                maxFlow += maxWayFlow;
+                graphState = graphState.AddFlow(wayToEndNode, maxWayFlow);
+                residualGraph = graphState.ToResidual();
+                minResidualGraph = residualGraph.ToMinResidual(maxPowerOfTwo);
+                onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. minResidualGraph.Edges.Values]));
+            }
+
+            maxPowerOfTwo /= 2;
         }
 
         return (maxFlow, graph with { Edges = [.. graphState.GetEdges()] });
