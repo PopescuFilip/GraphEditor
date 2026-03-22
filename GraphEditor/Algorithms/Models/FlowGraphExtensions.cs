@@ -6,6 +6,15 @@ namespace GraphEditor.Algorithms.Models;
 
 public static class FlowGraphExtensions
 {
+    public static GraphState<FlowEdge> DoubleFlow(this GraphState<FlowEdge> flowGraphState)
+    {
+        var newEdges = flowGraphState.Edges
+            .Select(x => KeyValuePair.Create(x.Key, x.Value with { Flow = x.Value.Flow * 2}))
+            .ToImmutableDictionary();
+
+        return flowGraphState with { Edges = newEdges };
+    }
+
     public static GraphState<FlowEdge> AddFlow(this GraphState<FlowEdge> flowGraphState, Way way, int flow)
     {
         var newEdges = flowGraphState.Edges

@@ -1,5 +1,6 @@
 ﻿using GraphEditor.Algorithms.Models;
 using GraphEditor.Models;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 
 namespace GraphEditor.Algorithms;
@@ -14,27 +15,28 @@ public class GabowAlgorithm : IAlgorithm
     {
         var maxFlow = initialFlow;
         var graphState = GraphState.CreateRange(graph.Edges);
-        var residualGraph = graphState.ToResidual();
-        onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
 
-        var maxResidual = residualGraph.Edges.Values.Select(x => x.ResidualValue).Max();
-        var maxPowerOfTwo = MathUtilities.GetMaxPowerOfTwoLessThan(maxResidual);
-
-        while (maxPowerOfTwo != 0)
+        var stack = new Stack<CapacityContainer>();
+        foreach (var current in GetCapacitiesHalved(graphState))
         {
-            var minResidualGraph = graphState.ToResidual().ToMinResidual(maxPowerOfTwo);
-            onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. minResidualGraph.Edges.Values]));
+            stack.Push(current);
+        }
 
-            while (TryFindWayToEndNode(minResidualGraph, startNode, endNode, out var wayToEndNode))
+        while (stack.TryPop(out var currentCapacity))
+        {
+            maxFlow *= 2;
+            graphState = ApplyCapacities(graphState, currentCapacity).DoubleFlow();
+            var residualGraph = graphState.ToResidual();
+            onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
+
+            while (TryFindWayToEndNode(residualGraph, startNode, endNode, out var wayToEndNode))
             {
-                var maxWayFlow = minResidualGraph.GetMinResidualValue(wayToEndNode);
+                var maxWayFlow = residualGraph.GetMinResidualValue(wayToEndNode);
                 maxFlow += maxWayFlow;
                 graphState = graphState.AddFlow(wayToEndNode, maxWayFlow);
-                minResidualGraph = graphState.ToResidual().ToMinResidual(maxPowerOfTwo);
-                onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. minResidualGraph.Edges.Values]));
+                residualGraph = graphState.ToResidual();
+                onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
             }
-
-            maxPowerOfTwo /= 2;
         }
 
         return (maxFlow, graph with { Edges = [.. graphState.GetEdges()] });
@@ -78,4 +80,29 @@ public class GabowAlgorithm : IAlgorithm
         wayToEndNode = new Way([.. edges]);
         return true;
     }
+
+    private GraphState<FlowEdge> ApplyCapacities(GraphState<FlowEdge> graphState, CapacityContainer capacityContainer)
+    {
+        var newEdges = graphState.Edges
+            .Select(x => KeyValuePair.Create(x.Key, x.Value with { Capacity = capacityContainer.Capacities[x.Key] }))
+            .ToImmutableDictionary();
+
+        return graphState with { Edges = newEdges };
+    }
+
+    private IEnumerable<CapacityContainer> GetCapacitiesHalved(GraphState<FlowEdge> graphState)
+    {
+        var graphCapacities = graphState.Edges.Select(x => KeyValuePair.Create(x.Key, x.Value.Capacity)).ToImmutableDictionary();
+        var currentContainer = new CapacityContainer(graphCapacities);
+        yield return currentContainer;
+
+        while (currentContainer.Capacities.Values.Any(x => x > 1))
+        {
+            var newCapacities = currentContainer.Capacities.Select(x => KeyValuePair.Create(x.Key, x.Value / 2)).ToImmutableDictionary();
+            currentContainer = new CapacityContainer(newCapacities);
+            yield return currentContainer;
+        }
+    }
+
+    private record CapacityContainer(ImmutableDictionary<(int, int), int> Capacities);
 }
