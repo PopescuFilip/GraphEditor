@@ -45,10 +45,7 @@ public class MainViewModel : ViewModelBase
         Delete = new RelayCommand(
             () => _service.GetRequiredService<GraphViewModel>().Delete.Execute(null),
             () => CurrentViewModel is GraphViewModel);
-        ViewHistory = new NavigationCommand<GraphHistoryViewModel>(this)
-        {
-            Configure = (g) => g.Reset()
-        };
+        ViewHistory = new NavigationCommand<GraphHistoryViewModel>(this, (g) => g.Reset());
 
         var navigateCommand = new NavigationCommand<ReadOnlyGraphViewModel>(this);
         ExecuteGenericAlgorithm = new AlgorithmCommand(GetGraph, new GenericAlgorithm(), navigateCommand, graphStore);
