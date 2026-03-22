@@ -33,7 +33,7 @@
                 VerticalAlignment="Top"
                 Background="White"
                 FontWeight="Bold"
-                Text="{Binding FlowCapacity}">
+                Text="{Binding Label}">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Setter Property="FontWeight" Value="Normal" />

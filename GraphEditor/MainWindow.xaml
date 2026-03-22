@@ -19,6 +19,9 @@
             <DataTemplate DataType="{x:Type vms:ReadOnlyGraphViewModel}">
                 <views:ReadOnlyGraphView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type vms:GraphHistoryViewModel}">
+                <views:GraphHistoryView />
+            </DataTemplate>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
@@ -37,6 +40,9 @@
                 <MenuItem Width="75" Header="Algorithms">
                     <MenuItem Command="{Binding ExecuteGenericAlgorithm}" Header="Generic" />
                     <MenuItem Command="{Binding ExecuteFordFulkersonAlgorithm}" Header="FordFulkerson" />
+                </MenuItem>
+                <MenuItem Width="45" Header="View">
+                    <MenuItem Command="{Binding ViewHistory}" Header="Residual" />
                 </MenuItem>
             </Menu>
         </Grid>

@@ -1,6 +1,7 @@
 ﻿using GraphEditor.Algorithms;
 using GraphEditor.Commands;
 using GraphEditor.Models;
+using GraphEditor.Store;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using System.ComponentModel;
@@ -32,8 +33,9 @@ public class MainViewModel : ViewModelBase
     public RelayCommand Delete { get; }
     public ICommand ExecuteGenericAlgorithm { get; }
     public ICommand ExecuteFordFulkersonAlgorithm { get; }
+    public ICommand ViewHistory { get; }
 
-    public MainViewModel(IServiceProvider service)
+    public MainViewModel(IServiceProvider service, ResidualGraphStore graphStore)
     {
         _service = service;
         CurrentViewModel = _service.GetRequiredService<GraphViewModel>();
@@ -43,8 +45,11 @@ public class MainViewModel : ViewModelBase
         Delete = new RelayCommand(
             () => _service.GetRequiredService<GraphViewModel>().Delete.Execute(null),
             () => CurrentViewModel is GraphViewModel);
-        ExecuteGenericAlgorithm = new AlgorithmCommand(GetGraph, new GenericAlgorithm(), this);
-        ExecuteFordFulkersonAlgorithm = new AlgorithmCommand(GetGraph, new FordFulkersonAlgorithm(), this);
+        ViewHistory = new NavigationCommand<GraphHistoryViewModel>(this, (g) => g.Reset());
+
+        var navigateCommand = new NavigationCommand<ReadOnlyGraphViewModel>(this);
+        ExecuteGenericAlgorithm = new AlgorithmCommand(GetGraph, new GenericAlgorithm(), navigateCommand, graphStore);
+        ExecuteFordFulkersonAlgorithm = new AlgorithmCommand(GetGraph, new FordFulkersonAlgorithm(), navigateCommand, graphStore);
         PropertyChanged += CurrentViewModelChangedHandler;
     }
 
