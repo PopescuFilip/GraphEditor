@@ -25,12 +25,14 @@ public partial class App : Application
     {
         return new ServiceCollection()
             .AddSingleton(s => new MainWindow()
-                {
-                    DataContext = s.GetRequiredService<MainViewModel>()
-                })
+            {
+                DataContext = s.GetRequiredService<MainViewModel>()
+            })
             .AddSingleton<MainViewModel>()
             .AddSingleton<GraphViewModel>()
             .AddSingleton<ReadOnlyGraphViewModel>()
+            .AddSingleton<GraphHistoryViewModel>()
+            .AddSingleton<ResidualGraphStore>()
             .BuildServiceProvider();
     }
 }
