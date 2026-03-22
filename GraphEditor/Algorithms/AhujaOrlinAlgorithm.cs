@@ -22,7 +22,7 @@ public class AhujaOrlinAlgorithm : IAlgorithm
 
         while (maxPowerOfTwo != 0)
         {
-            var minResidualGraph = residualGraph.ToMinResidual(maxPowerOfTwo);
+            var minResidualGraph = graphState.ToResidual().ToMinResidual(maxPowerOfTwo);
             onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. minResidualGraph.Edges.Values]));
 
             while (TryFindWayToEndNode(minResidualGraph, startNode, endNode, out var wayToEndNode))
@@ -30,8 +30,7 @@ public class AhujaOrlinAlgorithm : IAlgorithm
                 var maxWayFlow = residualGraph.GetMinResidualValue(wayToEndNode);
                 maxFlow += maxWayFlow;
                 graphState = graphState.AddFlow(wayToEndNode, maxWayFlow);
-                residualGraph = graphState.ToResidual();
-                minResidualGraph = residualGraph.ToMinResidual(maxPowerOfTwo);
+                minResidualGraph = graphState.ToResidual().ToMinResidual(maxPowerOfTwo);
                 onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. minResidualGraph.Edges.Values]));
             }
 
