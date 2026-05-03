@@ -6,7 +6,7 @@ namespace GraphEditor.Algorithms.Tagging;
 
 public static class TaggingHelper
 {
-    public static IEnumerable<int> GetAdmissibleEdges(this GraphState<ResidualEdge> graphState, int fromNode, IReadOnlyDictionary<int, int> tags) =>
+    public static IEnumerable<int> GetAdmissibleNodes(this GraphState<ResidualEdge> graphState, int fromNode, IReadOnlyDictionary<int, int> tags) =>
         graphState.AdjacencyList.TryGetValue(fromNode, out var adjacencyList)
         ? adjacencyList.Where(toNode => IsAdmissible((fromNode, toNode), tags))
         : [];

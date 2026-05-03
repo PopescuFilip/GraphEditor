@@ -43,10 +43,10 @@ public class AhujaOrlinAlgorithm : IAlgorithm
 
         while (tags[startNode] < nodesCount)
         {
-            var admissibleEdges = graphState.GetAdmissibleEdges(currentNode, tags).ToImmutableArray();
-            if (admissibleEdges.Length == 0)
+            var admissibleNodes = graphState.GetAdmissibleNodes(currentNode, tags).ToImmutableArray();
+            if (admissibleNodes.Length == 0)
             {
-                var minDistance = admissibleEdges.Select(node => tags[node]).Min();
+                var minDistance = admissibleNodes.Select(node => tags[node]).Min();
                 tags[currentNode] = minDistance + 1;
 
                 if (currentNode != startNode)
@@ -54,9 +54,10 @@ public class AhujaOrlinAlgorithm : IAlgorithm
                 continue;
             }
 
-            var admissibleEdge = admissibleEdges.First();
-            parents[admissibleEdge] = currentNode;
-            currentNode = admissibleEdge;
+            var admissibleNode = admissibleNodes.First();
+            parents[admissibleNode] = currentNode;
+            currentNode = admissibleNode;
+
             if (currentNode == endNode)
             {
                 wayToEndNode = parents.ToWay(endNode);
