@@ -17,7 +17,7 @@ public class StratifiedAlgorithm : IAlgorithm
         var residualGraph = graphState.ToResidual();
         onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
 
-        var wayFinder = new WayFinder(startNode, endNode, residualGraph, graph.Nodes.Length);
+        var wayFinder = new WayFinder(startNode, endNode, residualGraph, graph.Nodes);
 
         while (wayFinder.TryFindWayToEndNode(residualGraph, out var wayToEndNode))
         {
@@ -31,9 +31,12 @@ public class StratifiedAlgorithm : IAlgorithm
         return (maxFlow, graph with { Edges = [.. graphState.GetEdges()] });
     }
 
-    private class WayFinder(int startNode, int endNode, GraphState<ResidualEdge> initialGraphState, int nodesCount) : IWayFinder
+    private class WayFinder(int startNode, int endNode, GraphState<ResidualEdge> initialGraphState, IEnumerable<Node> nodes)
+        : IWayFinder
     {
         private Dictionary<int, int> _tags = initialGraphState.GetDistanceTags(endNode);
+        private Dictionary<int, int> _blocked = nodes.ToDictionary(node => node.Number, node => 0);
+        private readonly int _nodesCount = nodes.Count();
 
         public bool TryFindWayToEndNode(GraphState<ResidualEdge> graphState, [NotNullWhen(true)] out Way? wayToEndNode)
         {
@@ -42,13 +45,25 @@ public class StratifiedAlgorithm : IAlgorithm
             var parents = new Dictionary<int, int>();
             var currentNode = startNode;
 
-            while (_tags[startNode] < nodesCount)
+            while (_tags[startNode] < _nodesCount)
             {
-                var admissibleNodes = graphState.GetAdmissibleNodes(currentNode, _tags).ToList();
+                if (_blocked[startNode] != 0)
+                {
+                    _tags = graphState.GetDistanceTags(endNode);
+                    foreach (var key in _blocked.Keys)
+                    {
+                        _blocked[key] = 0;
+                    }
+                    continue;
+                }
+
+                var admissibleNodes = graphState
+                    .GetAdmissibleNodes(currentNode, _tags)
+                    .Where(n => _blocked[n] == 0)
+                    .ToList();
                 if (admissibleNodes.Count == 0)
                 {
-                    var minDistance = graphState.AdjacencyList[currentNode].Select(node => _tags[node]).Min();
-                    _tags[currentNode] = minDistance + 1;
+                    _blocked[currentNode] = 1;
 
                     if (currentNode != startNode)
                         currentNode = parents[currentNode];
