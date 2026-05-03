@@ -1,23 +1,22 @@
 ﻿using GraphEditor.Algorithms.Models;
 using GraphEditor.Models;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 
 namespace GraphEditor.Algorithms.Tagging;
 
-public class TaggingAlgorithm
+public static class TaggingAlgorithm
 {
-    public IReadOnlyDictionary<int, int> GetTags(GraphState<ResidualEdge> graphState, int endNode)
+    public static IReadOnlyDictionary<int, int> GetDistanceTags(this GraphState<ResidualEdge> graphState, int startNode)
     {
         var tags = new Dictionary<int, int>
         {
-            [endNode] = 0
+            [startNode] = 0
         };
 
-        var seenNodes = new List<int>() { endNode };
+        var seenNodes = new List<int>() { startNode };
         var analysedNodes = new List<int>();
         var nodesToAnalyse = new Queue<int>();
-        nodesToAnalyse.Enqueue(endNode);
+        nodesToAnalyse.Enqueue(startNode);
 
         while (analysedNodes.Count != 0)
         {
