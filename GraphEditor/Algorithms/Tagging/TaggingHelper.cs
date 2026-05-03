@@ -14,17 +14,17 @@ public static class TaggingHelper
     public static bool IsAdmissible(this (int, int) edge, IReadOnlyDictionary<int, int> tags) =>
         tags[edge.Item1] == tags[edge.Item2] + 1;
 
-    public static IReadOnlyDictionary<int, int> GetDistanceTags(this GraphState<ResidualEdge> graphState, int startNode)
+    public static IReadOnlyDictionary<int, int> GetDistanceTags(this GraphState<ResidualEdge> graphState, int endNode)
     {
         var tags = new Dictionary<int, int>
         {
-            [startNode] = 0
+            [endNode] = 0
         };
 
-        var seenNodes = new List<int>() { startNode };
+        var seenNodes = new List<int>() { endNode };
         var analysedNodes = new List<int>();
         var nodesToAnalyse = new Queue<int>();
-        nodesToAnalyse.Enqueue(startNode);
+        nodesToAnalyse.Enqueue(endNode);
 
         while (analysedNodes.Count != 0)
         {
