@@ -4,8 +4,16 @@ using System.Collections.Immutable;
 
 namespace GraphEditor.Algorithms.Tagging;
 
-public static class TaggingAlgorithm
+public static class TaggingHelper
 {
+    public static IEnumerable<int> GetAdmissibleEdges(this GraphState<ResidualEdge> graphState, int fromNode, IReadOnlyDictionary<int, int> tags) =>
+        graphState.AdjacencyList.TryGetValue(fromNode, out var adjacencyList)
+        ? adjacencyList.Where(toNode => IsAdmissible((fromNode, toNode), tags))
+        : [];
+
+    public static bool IsAdmissible(this (int, int) edge, IReadOnlyDictionary<int, int> tags) =>
+        tags[edge.Item1] == tags[edge.Item2] + 1;
+
     public static IReadOnlyDictionary<int, int> GetDistanceTags(this GraphState<ResidualEdge> graphState, int startNode)
     {
         var tags = new Dictionary<int, int>
