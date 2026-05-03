@@ -14,7 +14,7 @@ public static class TaggingHelper
     public static bool IsAdmissible(this (int, int) edge, IReadOnlyDictionary<int, int> tags) =>
         tags[edge.Item1] == tags[edge.Item2] + 1;
 
-    public static IReadOnlyDictionary<int, int> GetDistanceTags(this GraphState<ResidualEdge> graphState, int endNode)
+    public static Dictionary<int, int> GetDistanceTags(this GraphState<ResidualEdge> graphState, int endNode)
     {
         var tags = new Dictionary<int, int>
         {

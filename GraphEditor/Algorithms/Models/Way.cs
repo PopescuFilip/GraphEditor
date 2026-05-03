@@ -8,4 +8,7 @@ public static class WayExtensions
 {
     public static Way Reverse(this Way way) =>
         way with { Edges = [.. way.Edges.Select(x => x.Swap())] };
+
+    public static Way ToWay(this IReadOnlyDictionary<int, int> parents, int startingWith) =>
+        new(Edges: [.. parents.SelectStartingWith(startingWith).Reverse().SelectPairs()]);
 }
