@@ -1,4 +1,5 @@
 ﻿using GraphEditor.Algorithms;
+using GraphEditor.Algorithms.Tagging;
 using GraphEditor.Commands;
 using GraphEditor.Models;
 using GraphEditor.Store;
@@ -9,6 +10,8 @@ using System.IO;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
+using AhujaSimple = GraphEditor.Algorithms.AhujaOrlinAlgorithm;
+using AhujaTagging = GraphEditor.Algorithms.Tagging.AhujaOrlinAlgorithm;
 
 namespace GraphEditor.ViewModels;
 
@@ -36,6 +39,8 @@ public class MainViewModel : ViewModelBase
     public ICommand ExecuteEdmondsKarpAlgorithm { get; }
     public ICommand ExecuteAhujaOrlinAlgorithm { get; }
     public ICommand ExecuteGabowAlgorithm { get; }
+    public ICommand ExecuteTagAhujaOrlin { get; }
+    public ICommand ExecuteStratified { get; }
     public ICommand ViewHistory { get; }
 
     public MainViewModel(IServiceProvider service, ResidualGraphStore graphStore)
@@ -54,8 +59,10 @@ public class MainViewModel : ViewModelBase
         ExecuteGenericAlgorithm = new AlgorithmCommand(GetGraph, new GenericAlgorithm(), navigateCommand, graphStore);
         ExecuteFordFulkersonAlgorithm = new AlgorithmCommand(GetGraph, new FordFulkersonAlgorithm(), navigateCommand, graphStore);
         ExecuteEdmondsKarpAlgorithm = new AlgorithmCommand(GetGraph, new EdmondsKarpAlgorithm(), navigateCommand, graphStore);
-        ExecuteAhujaOrlinAlgorithm = new AlgorithmCommand(GetGraph, new AhujaOrlinAlgorithm(), navigateCommand, graphStore);
+        ExecuteAhujaOrlinAlgorithm = new AlgorithmCommand(GetGraph, new AhujaSimple(), navigateCommand, graphStore);
         ExecuteGabowAlgorithm = new AlgorithmCommand(GetGraph, new GabowAlgorithm(), navigateCommand, graphStore);
+        ExecuteTagAhujaOrlin = new AlgorithmCommand(GetGraph, new AhujaTagging(), navigateCommand, graphStore);
+        ExecuteStratified = new AlgorithmCommand(GetGraph, new StratifiedAlgorithm(), navigateCommand, graphStore);
         PropertyChanged += CurrentViewModelChangedHandler;
     }
 
