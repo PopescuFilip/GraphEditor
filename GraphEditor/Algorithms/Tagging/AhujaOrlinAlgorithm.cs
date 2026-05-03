@@ -41,7 +41,7 @@ public class AhujaOrlinAlgorithm : IAlgorithm
         var parents = new Dictionary<int, int>();
         var currentNode = startNode;
 
-        while (currentNode != endNode && tags[startNode] < nodesCount)
+        while (tags[startNode] < nodesCount)
         {
             var admissibleEdges = graphState.GetAdmissibleEdges(currentNode, tags).ToImmutableArray();
             if (admissibleEdges.Length == 0)
@@ -57,12 +57,13 @@ public class AhujaOrlinAlgorithm : IAlgorithm
             var admissibleEdge = admissibleEdges.First();
             parents[admissibleEdge] = currentNode;
             currentNode = admissibleEdge;
+            if (currentNode == endNode)
+            {
+                wayToEndNode = parents.ToWay(endNode);
+                return true;
+            }
         }
 
-        if (!parents.ContainsKey(endNode))
-            return false;
-
-        wayToEndNode = parents.ToWay(endNode);
-        return true;
+        return false;
     }
 }
