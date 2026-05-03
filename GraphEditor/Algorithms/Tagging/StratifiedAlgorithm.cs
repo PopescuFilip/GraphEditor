@@ -7,7 +7,7 @@ namespace GraphEditor.Algorithms.Tagging;
 public class StratifiedAlgorithm : IAlgorithm
 {
     public (int MaxFlow, Graph ResultingGraph) Run(Graph graph, Action<Graph<ResidualEdge>> onNewResidualGraph) =>
-    Run(graph, graph.Nodes.Min(x => x.Number), graph.Nodes.Max(x => x.Number), 0, onNewResidualGraph);
+        Run(graph, graph.Nodes.Min(x => x.Number), graph.Nodes.Max(x => x.Number), 0, onNewResidualGraph);
 
     public (int MaxFlow, Graph ResultingGraph) Run(Graph graph, int startNode, int endNode, int initialFlow,
         Action<Graph<ResidualEdge>> onNewResidualGraph)
@@ -45,7 +45,7 @@ public class StratifiedAlgorithm : IAlgorithm
             var parents = new Dictionary<int, int>();
             var currentNode = startNode;
 
-            while (_tags[startNode] < _nodesCount)
+            while (_tags.TryGetValue(startNode, out var startTag) && startTag < _nodesCount)
             {
                 if (_blocked[startNode] != 0)
                 {
