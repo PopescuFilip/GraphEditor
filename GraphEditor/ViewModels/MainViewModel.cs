@@ -36,6 +36,7 @@ public class MainViewModel : ViewModelBase
     public ICommand ExecuteEdmondsKarpAlgorithm { get; }
     public ICommand ExecuteAhujaOrlinAlgorithm { get; }
     public ICommand ExecuteGabowAlgorithm { get; }
+    public ICommand ExecuteTagAhujaOrlin { get; }
     public ICommand ViewHistory { get; }
 
     public MainViewModel(IServiceProvider service, ResidualGraphStore graphStore)
@@ -56,6 +57,7 @@ public class MainViewModel : ViewModelBase
         ExecuteEdmondsKarpAlgorithm = new AlgorithmCommand(GetGraph, new EdmondsKarpAlgorithm(), navigateCommand, graphStore);
         ExecuteAhujaOrlinAlgorithm = new AlgorithmCommand(GetGraph, new AhujaOrlinAlgorithm(), navigateCommand, graphStore);
         ExecuteGabowAlgorithm = new AlgorithmCommand(GetGraph, new GabowAlgorithm(), navigateCommand, graphStore);
+        ExecuteTagAhujaOrlin = new AlgorithmCommand(GetGraph, new Algorithms.Tagging.AhujaOrlinAlgorithm(), navigateCommand, graphStore);
         PropertyChanged += CurrentViewModelChangedHandler;
     }
 

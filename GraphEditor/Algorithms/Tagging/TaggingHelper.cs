@@ -26,12 +26,17 @@ public static class TaggingHelper
         var nodesToAnalyse = new Queue<int>();
         nodesToAnalyse.Enqueue(endNode);
 
-        while (analysedNodes.Count != 0)
+        while (nodesToAnalyse.Count != 0)
         {
             var currentNode = nodesToAnalyse.Dequeue();
             analysedNodes.Add(currentNode);
 
-            if (!graphState.AdjacencyList.TryGetValue(currentNode, out var adjacentNodes))
+            var adjacentNodes = graphState
+                .GetEdges()
+                .Where(edge => edge.EndNode == currentNode)
+                .Select(edge => edge.StartNode)
+                .ToImmutableArray();
+            if (adjacentNodes.Length == 0)
                 continue;
 
             var undiscoveredNodes = adjacentNodes
@@ -45,7 +50,7 @@ public static class TaggingHelper
                 foreach (var undiscoveredNode in undiscoveredNodes)
                 {
                     tags[undiscoveredNode] = currentTag + 1;
-                    seenNodes.Add(currentTag);
+                    seenNodes.Add(undiscoveredNode);
                     nodesToAnalyse.Enqueue(undiscoveredNode);
                 }
             }
