@@ -43,7 +43,7 @@
                     <MenuItem Command="{Binding ExecuteEdmondsKarpAlgorithm}" Header="EdmondsKarp" />
                     <MenuItem Command="{Binding ExecuteAhujaOrlinAlgorithm}" Header="Ahuja-Orlin" />
                     <MenuItem Command="{Binding ExecuteGabowAlgorithm}" Header="Gabow" />
-                    <MenuItem Command="{Binding ExecuteTagAhujaOrlin}" Header="Ahuja-Orlin w/ tags" />
+                    <MenuItem Command="{Binding ExecuteTagAhujaOrlin}" Header="Ahuja-Orlin shortest way" />
                     <MenuItem Command="{Binding ExecuteStratified}" Header="Ahuja-Orlin stratified" />
                 </MenuItem>
                 <MenuItem Width="45" Header="View">

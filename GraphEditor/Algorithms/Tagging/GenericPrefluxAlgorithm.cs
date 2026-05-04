@@ -13,6 +13,7 @@ public class GenericPrefluxAlgorithm
         Action<Graph<ResidualEdge>> onNewResidualGraph)
     {
         var maxFlow = initialFlow;
+        var excessGraphState = GraphState.CreateRange(graph.Edges.Select(e => new ExcessEdge(e)));
         var graphState = GraphState.CreateRange(graph.Edges);
         var residualGraph = graphState.ToResidual();
         onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
