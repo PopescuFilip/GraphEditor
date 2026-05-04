@@ -1,6 +1,5 @@
 ﻿using GraphEditor.Algorithms.Models;
 using GraphEditor.Models;
-using System.Diagnostics.CodeAnalysis;
 
 namespace GraphEditor.Algorithms.Tagging;
 
@@ -13,8 +12,7 @@ public class GenericPrefluxAlgorithm
         Action<Graph<ResidualEdge>> onNewResidualGraph)
     {
         var maxFlow = initialFlow;
-        var excessGraphState = GraphState.CreateRange(graph.Edges.Select(e => new ExcessEdge(e)));
-        var graphState = GraphState.CreateRange(graph.Edges);
+        var graphState = GraphState.CreateRange(graph.Edges.Select(e => new ExcessEdge(e)));
         var residualGraph = graphState.ToResidual();
         onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
 
@@ -35,13 +33,13 @@ public class GenericPrefluxAlgorithm
         return (maxFlow, graph with { Edges = [.. graphState.GetEdges()] });
     }
 
-    private IEnumerable<KeyValuePair<(int, int), FlowEdge>> GetInitialEdges(GraphState<FlowEdge> graphState, int startNode)
+    private IEnumerable<KeyValuePair<(int, int), ExcessEdge>> GetInitialEdges(GraphState<ExcessEdge> graphState, int startNode)
     {
         foreach (var adjacentNode in graphState.AdjacencyList[startNode])
         {
             var edgeKey = (startNode, adjacentNode);
             var edgeValue = graphState.Edges[edgeKey];
-            var newEdgeValue = edgeValue with { Flow = edgeValue.Capacity };
+            var newEdgeValue = edgeValue with { Flow = edgeValue.Capacity, Excess = edgeValue.Capacity };
             yield return KeyValuePair.Create(edgeKey, newEdgeValue);
         }
     }
