@@ -12,21 +12,20 @@ public class GenericPrefluxAlgorithm : IAlgorithm
         Action<Graph<ResidualEdge>> onNewResidualGraph)
     {
         var maxFlow = initialFlow;
-        var graphState = GraphState.CreateRange(graph.Edges);
+        var graphState = GraphState.CreateRange(graph.Edges).ToExcess();
         var residualGraph = graphState.ToResidual();
         onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
 
-        var excess = new Dictionary<int, int>();
         var tags = residualGraph.GetDistanceTags(endNode);
         tags[startNode] = graph.Nodes.Length;
-        graphState = graphState with { Edges = graphState.Edges.SetItems(GetInitialEdges(graphState, startNode)) };
+        graphState = SetInitialFlow(graphState, startNode);
 
         while (true)
         {
             var wayToEndNode = new Way([]);
             var maxWayFlow = residualGraph.GetMinResidualValue(wayToEndNode);
             maxFlow += maxWayFlow;
-            graphState = graphState.AddFlow(wayToEndNode, maxWayFlow);
+            //graphState = graphState.AddFlow(wayToEndNode, maxWayFlow);
             residualGraph = graphState.ToResidual();
             onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
         }
@@ -34,27 +33,17 @@ public class GenericPrefluxAlgorithm : IAlgorithm
         return (maxFlow, graph with { Edges = [.. graphState.GetEdges()] });
     }
 
-    private IEnumerable<KeyValuePair<(int, int), FlowEdge>> GetInitialEdges(GraphState<FlowEdge> graphState, int startNode, Dictionary<int, int> excess)
+    private ExcessGraphState SetInitialFlow(ExcessGraphState graphState, int startNode)
     {
+        var newGraphState = graphState with {};
+
         foreach (var adjacentNode in graphState.AdjacencyList[startNode])
         {
             var edgeKey = (startNode, adjacentNode);
-            var edgeValue = graphState.Edges[edgeKey];
-            var newEdgeValue = edgeValue with { Flow = edgeValue.Capacity };
-            yield return KeyValuePair.Create(edgeKey, newEdgeValue);
+            var edge = graphState.Edges[edgeKey];
+            newGraphState = newGraphState.AddFlow(edge, edge.Capacity);
         }
-    }
 
-    private static FlowEdge AddFlow(FlowEdge edge, int flow, Dictionary<int, int> excess)
-    {
-        var newEdge = edge with { Flow = edge.Flow + flow };
-
-        var initialStartExcess = excess.TryGetValue(edge.StartNode, out var startExcess) ? startExcess : 0;
-        excess[edge.StartNode] = initialStartExcess - flow;
-
-        var initialEndExcess = excess.TryGetValue(edge.EndNode, out var endExcess) ? endExcess : 0;
-        excess[edge.EndNode] = initialEndExcess + flow;
-
-        return newEdge;
+        return newGraphState;
     }
 }

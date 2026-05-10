@@ -11,9 +11,18 @@ public record ExcessGraphState(
 
 public static class ExcessGraphStateExtensions
 {
+    public static ExcessGraphState ToExcess(this GraphState<FlowEdge> graphState) =>
+        new(graphState.AdjacencyList, graphState.Edges, ImmutableDictionary<int, int>.Empty);
+
     public static ExcessGraphState AddFlow(this ExcessGraphState graphState, (int, int) edgeKey, int flow)
     {
         var edge = graphState.Edges[edgeKey];
+        return graphState.AddFlow(edge, flow);
+    }
+
+    public static ExcessGraphState AddFlow(this ExcessGraphState graphState, FlowEdge edge, int flow)
+    {
+        var edgeKey = (edge.StartNode, edge.EndNode);
         var newEdge = edge with { Flow = edge.Flow + flow };
         var newEdges = graphState.Edges.SetItem(edgeKey, newEdge);
 
