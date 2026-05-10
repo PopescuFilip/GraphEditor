@@ -1,5 +1,6 @@
 ﻿using GraphEditor.Models;
 using System.Collections.Immutable;
+using KvpFlowEdge = System.Collections.Generic.KeyValuePair<(int, int), GraphEditor.Models.FlowEdge>;
 
 namespace GraphEditor.Algorithms.Models;
 
@@ -14,7 +15,7 @@ public static class FlowGraphExtensions
         return flowGraphState with { Edges = newEdges };
     }
 
-    public static GraphState<T> AddFlow<T>(this GraphState<T> flowGraphState, Way way, int flow) where T : FlowEdge
+    public static GraphState<FlowEdge> AddFlow(this GraphState<FlowEdge> flowGraphState, Way way, int flow)
     {
         var newEdges = flowGraphState.Edges
             .GroupBy(x => way.Edges.Contains(x.Key))
@@ -28,7 +29,7 @@ public static class FlowGraphExtensions
         return (flowGraphState with { Edges = newEdges }).FixFlow();
     }
 
-    private static GraphState<T> FixFlow<T>(this GraphState<T> flowGraphState) where T : FlowEdge
+    private static GraphState<FlowEdge> FixFlow(this GraphState<FlowEdge> flowGraphState)
     {
         var overflowedEdges = flowGraphState.Edges
             .Where(x => x.Value.Flow > x.Value.Capacity)
@@ -93,14 +94,12 @@ public static class FlowGraphExtensions
         return capacity - flow + inverseFlow;
     }
 
-    private static IEnumerable<KeyValuePair<(int, int), T>> SelectFixedEdges<T>(this IEnumerable<KeyValuePair<(int, int), T>> flowEdges) where T : FlowEdge =>
+    private static IEnumerable<KvpFlowEdge> SelectFixedEdges(this IEnumerable<KvpFlowEdge> flowEdges) =>
         flowEdges
             .GroupBy(x => x.Key, GraphUtilities.OrderInsensitiveTupleComparer)
             .SelectMany(x => x.SelectPairs().First().ToFixedPair().ToEnumerable());
 
-    private static (KeyValuePair<(int, int), T>, KeyValuePair<(int, int), T>) ToFixedPair<T>
-        (this (KeyValuePair<(int, int), T>, KeyValuePair<(int, int), T>) pair) where T : FlowEdge
-        => pair switch
+    private static (KvpFlowEdge, KvpFlowEdge) ToFixedPair(this (KvpFlowEdge, KvpFlowEdge) pair) => pair switch
     {
         (var a, var b) when a.Value.Capacity < a.Value.Flow => (
         KeyValuePair.Create(a.Key, a.Value with { Flow = a.Value.Flow - b.Value.Flow }),

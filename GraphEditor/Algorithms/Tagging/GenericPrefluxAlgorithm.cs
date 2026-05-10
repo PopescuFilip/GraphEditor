@@ -3,7 +3,7 @@ using GraphEditor.Models;
 
 namespace GraphEditor.Algorithms.Tagging;
 
-public class GenericPrefluxAlgorithm
+public class GenericPrefluxAlgorithm : IAlgorithm
 {
     public (int MaxFlow, Graph ResultingGraph) Run(Graph graph, Action<Graph<ResidualEdge>> onNewResidualGraph) =>
         Run(graph, graph.Nodes.Min(x => x.Number), graph.Nodes.Max(x => x.Number), 0, onNewResidualGraph);
@@ -16,6 +16,7 @@ public class GenericPrefluxAlgorithm
         var residualGraph = graphState.ToResidual();
         onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
 
+        var excess = new Dictionary<int, int>();
         var tags = residualGraph.GetDistanceTags(endNode);
         tags[startNode] = graph.Nodes.Length;
         graphState = graphState with { Edges = graphState.Edges.SetItems(GetInitialEdges(graphState, startNode)) };
@@ -33,7 +34,7 @@ public class GenericPrefluxAlgorithm
         return (maxFlow, graph with { Edges = [.. graphState.GetEdges()] });
     }
 
-    private IEnumerable<KeyValuePair<(int, int), FlowEdge>> GetInitialEdges(GraphState<FlowEdge> graphState, int startNode)
+    private IEnumerable<KeyValuePair<(int, int), FlowEdge>> GetInitialEdges(GraphState<FlowEdge> graphState, int startNode, Dictionary<int, int> excess)
     {
         foreach (var adjacentNode in graphState.AdjacencyList[startNode])
         {
@@ -42,5 +43,18 @@ public class GenericPrefluxAlgorithm
             var newEdgeValue = edgeValue with { Flow = edgeValue.Capacity };
             yield return KeyValuePair.Create(edgeKey, newEdgeValue);
         }
+    }
+
+    private static FlowEdge AddFlow(FlowEdge edge, int flow, Dictionary<int, int> excess)
+    {
+        var newEdge = edge with { Flow = edge.Flow + flow };
+
+        var initialStartExcess = excess.TryGetValue(edge.StartNode, out var startExcess) ? startExcess : 0;
+        excess[edge.StartNode] = initialStartExcess - flow;
+
+        var initialEndExcess = excess.TryGetValue(edge.EndNode, out var endExcess) ? endExcess : 0;
+        excess[edge.EndNode] = initialEndExcess + flow;
+
+        return newEdge;
     }
 }
