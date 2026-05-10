@@ -1,5 +1,6 @@
 ﻿using GraphEditor.Algorithms.Models;
 using GraphEditor.Models;
+using System.ComponentModel;
 
 namespace GraphEditor.Algorithms.Tagging;
 
@@ -19,15 +20,35 @@ public class GenericPrefluxAlgorithm : IAlgorithm
         var tags = residualGraph.GetDistanceTags(endNode);
         tags[startNode] = graph.Nodes.Length;
         graphState = SetInitialFlow(graphState, startNode);
+        residualGraph = graphState.ToResidual();
 
-        while (true)
+        while (graphState.GetActiveNodes(endNode).Any())
         {
-            var wayToEndNode = new Way([]);
-            var maxWayFlow = residualGraph.GetMinResidualValue(wayToEndNode);
-            maxFlow += maxWayFlow;
-            //graphState = graphState.AddFlow(wayToEndNode, maxWayFlow);
-            residualGraph = graphState.ToResidual();
-            onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
+            var activeNodes = graphState.GetActiveNodes(endNode).ToList();
+            activeNodes.Shuffle();
+            var currentNode = activeNodes.First();
+
+            var admissibleNodes = residualGraph.GetAdmissibleNodes(currentNode, tags).ToList();
+
+            if (admissibleNodes.Count == 0)
+            {
+                var minDistance = graphState.AdjacencyList[currentNode].Select(node => tags[node]).Min();
+                tags[currentNode] = minDistance + 1;
+            }
+            else
+            {
+                admissibleNodes.Shuffle();
+                var admissibleNode = admissibleNodes.First();
+                var currentKey = (currentNode, admissibleNode);
+                var residualEdge = residualGraph.Edges[currentKey];
+
+                var flowToAdd = Math.Min(graphState.Excess.TryGetValueOrDefault(admissibleNode, 0), residualEdge.ResidualValue);
+                graphState = graphState.AddFlow(currentKey, flowToAdd);
+                maxFlow += flowToAdd;
+
+                residualGraph = graphState.ToResidual();
+                onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
+            }
         }
 
         return (maxFlow, graph with { Edges = [.. graphState.GetEdges()] });

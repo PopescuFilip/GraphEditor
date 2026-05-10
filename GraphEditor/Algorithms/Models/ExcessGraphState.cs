@@ -11,6 +11,9 @@ public record ExcessGraphState(
 
 public static class ExcessGraphStateExtensions
 {
+    public static IEnumerable<int> GetActiveNodes(this ExcessGraphState graphState, int endNode) =>
+        graphState.Excess.Values.Where(x => x > 0 && x != endNode);
+
     public static ExcessGraphState ToExcess(this GraphState<FlowEdge> graphState) =>
         new(graphState.AdjacencyList, graphState.Edges, ImmutableDictionary<int, int>.Empty);
 
@@ -26,10 +29,10 @@ public static class ExcessGraphStateExtensions
         var newEdge = edge with { Flow = edge.Flow + flow };
         var newEdges = graphState.Edges.SetItem(edgeKey, newEdge);
 
-        var initialStartExcess = graphState.Excess.TryGetValue(edge.StartNode, out var startExcess) ? startExcess : 0;
+        var initialStartExcess = graphState.Excess.TryGetValueOrDefault(edge.StartNode, 0);
         var newStartExcess = initialStartExcess - flow;
 
-        var initialEndExcess = graphState.Excess.TryGetValue(edge.EndNode, out var endExcess) ? endExcess : 0;
+        var initialEndExcess = graphState.Excess.TryGetValueOrDefault(edge.EndNode, 0);
         var newEndExcess = initialEndExcess + flow;
 
         var newExcess = graphState.Excess.SetItems(
