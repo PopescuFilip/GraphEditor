@@ -12,15 +12,18 @@ public record ExcessGraphState(
 public static class ExcessGraphStateExtensions
 {
     public static IEnumerable<int> GetActiveNodes(this ExcessGraphState graphState, int endNode) =>
-        graphState.Excess.Values.Where(x => x > 0 && x != endNode);
+        graphState.Excess.Where(kvp => kvp.Value > 0 && kvp.Key != endNode).Select(kvp => kvp.Key);
 
     public static ExcessGraphState ToExcess(this GraphState<FlowEdge> graphState) =>
         new(graphState.AdjacencyList, graphState.Edges, ImmutableDictionary<int, int>.Empty);
 
     public static ExcessGraphState AddFlow(this ExcessGraphState graphState, (int, int) edgeKey, int flow)
     {
-        var edge = graphState.Edges[edgeKey];
-        return graphState.AddFlow(edge, flow);
+        if (graphState.Edges.TryGetValue(edgeKey, out var edge))
+            return graphState.AddFlow(edge, flow);
+
+        var reverseEdge = graphState.Edges[edgeKey.Swap()];
+        return graphState.AddFlow(reverseEdge, -flow);
     }
 
     public static ExcessGraphState AddFlow(this ExcessGraphState graphState, FlowEdge edge, int flow)

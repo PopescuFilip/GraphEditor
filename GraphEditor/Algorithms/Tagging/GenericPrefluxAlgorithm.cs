@@ -12,7 +12,6 @@ public class GenericPrefluxAlgorithm : IAlgorithm
     public (int MaxFlow, Graph ResultingGraph) Run(Graph graph, int startNode, int endNode, int initialFlow,
         Action<Graph<ResidualEdge>> onNewResidualGraph)
     {
-        var maxFlow = initialFlow;
         var graphState = GraphState.CreateRange(graph.Edges).ToExcess();
         var residualGraph = graphState.ToResidual();
         onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
@@ -21,6 +20,7 @@ public class GenericPrefluxAlgorithm : IAlgorithm
         tags[startNode] = graph.Nodes.Length;
         graphState = SetInitialFlow(graphState, startNode);
         residualGraph = graphState.ToResidual();
+        onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
 
         while (graphState.GetActiveNodes(endNode).Any())
         {
@@ -32,7 +32,7 @@ public class GenericPrefluxAlgorithm : IAlgorithm
 
             if (admissibleNodes.Count == 0)
             {
-                var minDistance = graphState.AdjacencyList[currentNode].Select(node => tags[node]).Min();
+                var minDistance = residualGraph.AdjacencyList[currentNode].Select(node => tags[node]).Min();
                 tags[currentNode] = minDistance + 1;
             }
             else
@@ -42,15 +42,15 @@ public class GenericPrefluxAlgorithm : IAlgorithm
                 var currentKey = (currentNode, admissibleNode);
                 var residualEdge = residualGraph.Edges[currentKey];
 
-                var flowToAdd = Math.Min(graphState.Excess.TryGetValueOrDefault(admissibleNode, 0), residualEdge.ResidualValue);
+                var flowToAdd = Math.Min(graphState.Excess.TryGetValueOrDefault(currentNode, 0), residualEdge.ResidualValue);
                 graphState = graphState.AddFlow(currentKey, flowToAdd);
-                maxFlow += flowToAdd;
 
                 residualGraph = graphState.ToResidual();
                 onNewResidualGraph(new Graph<ResidualEdge>(graph.Nodes, [.. residualGraph.Edges.Values]));
             }
         }
 
+        var maxFlow = graphState.Excess[endNode];
         return (maxFlow, graph with { Edges = [.. graphState.GetEdges()] });
     }
 
