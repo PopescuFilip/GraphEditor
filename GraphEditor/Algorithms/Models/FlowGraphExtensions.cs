@@ -29,7 +29,7 @@ public static class FlowGraphExtensions
         return (flowGraphState with { Edges = newEdges }).FixFlow();
     }
 
-    private static GraphState<FlowEdge> FixFlow(this GraphState<FlowEdge> flowGraphState)
+    public static GraphState<FlowEdge> FixFlow(this GraphState<FlowEdge> flowGraphState)
     {
         var overflowedEdges = flowGraphState.Edges
             .Where(x => x.Value.Flow > x.Value.Capacity)

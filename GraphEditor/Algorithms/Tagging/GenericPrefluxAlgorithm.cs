@@ -51,7 +51,7 @@ public class GenericPrefluxAlgorithm : IAlgorithm
         }
 
         var maxFlow = graphState.Excess[endNode];
-        return (maxFlow, graph with { Edges = [.. graphState.GetEdges()] });
+        return (maxFlow, graph with { Edges = [.. graphState.FixFlow().GetEdges()] });
     }
 
     private ExcessGraphState SetInitialFlow(ExcessGraphState graphState, int startNode)
