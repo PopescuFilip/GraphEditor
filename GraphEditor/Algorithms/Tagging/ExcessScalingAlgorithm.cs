@@ -25,9 +25,9 @@ public class ExcessScalingAlgorithm : IAlgorithm
 
         while (treshold > 1)
         {
-            while (graphState.GetActiveNodes(endNode, treshold).Any())
+            while (graphState.GetActiveNodes(endNode, treshold / 2).Any())
             {
-                var currentNode = graphState.GetActiveNodes(endNode, treshold).MinBy(x => tags[x]);
+                var currentNode = graphState.GetActiveNodes(endNode, treshold / 2).MinBy(x => tags[x]);
 
                 var admissibleNodes = residualGraph.GetAdmissibleNodes(currentNode, tags).ToList();
                 if (admissibleNodes.Count == 0)
