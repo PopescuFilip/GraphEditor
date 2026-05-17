@@ -43,8 +43,11 @@
                     <MenuItem Command="{Binding ExecuteEdmondsKarpAlgorithm}" Header="EdmondsKarp" />
                     <MenuItem Command="{Binding ExecuteAhujaOrlinAlgorithm}" Header="Ahuja-Orlin" />
                     <MenuItem Command="{Binding ExecuteGabowAlgorithm}" Header="Gabow" />
-                    <MenuItem Command="{Binding ExecuteTagAhujaOrlin}" Header="Ahuja-Orlin w/ tags" />
+                    <MenuItem Command="{Binding ExecuteTagAhujaOrlin}" Header="Ahuja-Orlin shortest way" />
                     <MenuItem Command="{Binding ExecuteStratified}" Header="Ahuja-Orlin stratified" />
+                    <MenuItem Command="{Binding ExecutePrefluxGeneric}" Header="Preflux Generic" />
+                    <MenuItem Command="{Binding ExecutePrefluxFIFO}" Header="Preflux FIFO" />
+                    <MenuItem Command="{Binding ExecutePrefluxBiggestTag}" Header="Preflux Biggest Tag" />
                 </MenuItem>
                 <MenuItem Width="45" Header="View">
                     <MenuItem Command="{Binding ViewHistory}" Header="Residual" />

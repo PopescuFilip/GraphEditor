@@ -5,7 +5,17 @@ namespace GraphEditor.ViewModels;
 
 public class ReadOnlyGraphViewModel : ViewModelBase
 {
-    public int MaxFlow { get; set; }
+    private int maxFlow;
+
+    public int MaxFlow
+    {
+        get => maxFlow;
+        set
+        {
+            maxFlow = value;
+            OnPropertyChanged(nameof(MaxFlow));
+        }
+    }
 
     public ObservableCollection<Node> Nodes { get; set; } = [];
 

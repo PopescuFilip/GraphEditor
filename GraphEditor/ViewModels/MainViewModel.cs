@@ -41,6 +41,9 @@ public class MainViewModel : ViewModelBase
     public ICommand ExecuteGabowAlgorithm { get; }
     public ICommand ExecuteTagAhujaOrlin { get; }
     public ICommand ExecuteStratified { get; }
+    public ICommand ExecutePrefluxGeneric { get; }
+    public ICommand ExecutePrefluxFIFO { get; }
+    public ICommand ExecutePrefluxBiggestTag { get; }
     public ICommand ViewHistory { get; }
 
     public MainViewModel(IServiceProvider service, ResidualGraphStore graphStore)
@@ -63,6 +66,9 @@ public class MainViewModel : ViewModelBase
         ExecuteGabowAlgorithm = new AlgorithmCommand(GetGraph, new GabowAlgorithm(), navigateCommand, graphStore);
         ExecuteTagAhujaOrlin = new AlgorithmCommand(GetGraph, new AhujaTagging(), navigateCommand, graphStore);
         ExecuteStratified = new AlgorithmCommand(GetGraph, new StratifiedAlgorithm(), navigateCommand, graphStore);
+        ExecutePrefluxGeneric = new AlgorithmCommand(GetGraph, new GenericPrefluxAlgorithm(), navigateCommand, graphStore);
+        ExecutePrefluxFIFO = new AlgorithmCommand(GetGraph, new FIFOPrefluxAlgorithm(), navigateCommand, graphStore);
+        ExecutePrefluxBiggestTag = new AlgorithmCommand(GetGraph, new ExcessScalingAlgorithm(), navigateCommand, graphStore);
         PropertyChanged += CurrentViewModelChangedHandler;
     }
 
