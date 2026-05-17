@@ -11,8 +11,8 @@ public record ExcessGraphState(
 
 public static class ExcessGraphStateExtensions
 {
-    public static IEnumerable<int> GetActiveNodes(this ExcessGraphState graphState, int endNode) =>
-        graphState.Excess.Where(kvp => kvp.Value > 0 && kvp.Key != endNode).Select(kvp => kvp.Key);
+    public static IEnumerable<int> GetActiveNodes(this ExcessGraphState graphState, int endNode, int treshold = 0) =>
+        graphState.Excess.Where(kvp => kvp.Value > treshold && kvp.Key != endNode).Select(kvp => kvp.Key);
 
     public static ExcessGraphState ToExcess(this GraphState<FlowEdge> graphState) =>
         new(graphState.AdjacencyList, graphState.Edges, ImmutableDictionary<int, int>.Empty);
