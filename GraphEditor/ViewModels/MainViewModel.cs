@@ -67,8 +67,8 @@ public class MainViewModel : ViewModelBase
         ExecuteTagAhujaOrlin = new AlgorithmCommand(GetGraph, new AhujaTagging(), navigateCommand, graphStore);
         ExecuteStratified = new AlgorithmCommand(GetGraph, new StratifiedAlgorithm(), navigateCommand, graphStore);
         ExecutePrefluxGeneric = new AlgorithmCommand(GetGraph, new GenericPrefluxAlgorithm(), navigateCommand, graphStore);
-        //ExecutePrefluxFIFO = new AlgorithmCommand(GetGraph, new GenericPrefluxAlgorithm(), navigateCommand, graphStore);
-        //ExecutePrefluxBiggestTag = new AlgorithmCommand(GetGraph, new GenericPrefluxAlgorithm(), navigateCommand, graphStore);
+        ExecutePrefluxFIFO = new AlgorithmCommand(GetGraph, new FIFOPrefluxAlgorithm(), navigateCommand, graphStore);
+        //ExecutePrefluxBiggestTag = new AlgorithmCommand(GetGraph, new(), navigateCommand, graphStore);
         PropertyChanged += CurrentViewModelChangedHandler;
     }
 
