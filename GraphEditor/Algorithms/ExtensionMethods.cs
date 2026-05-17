@@ -4,6 +4,13 @@ public static class ExtensionMethods
 {
     public static (T, T) Swap<T>(this (T, T) value) => (value.Item2, value.Item1);
 
+    public static IReadOnlyList<T> Shuffled<T>(this IEnumerable<T> values)
+    {
+        var list = values.ToList();
+        list.Shuffle();
+        return list;
+    }
+
     public static void Shuffle<T>(this List<T> list)
     {
         var random = new Random();
