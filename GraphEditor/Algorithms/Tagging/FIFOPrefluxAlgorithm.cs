@@ -3,7 +3,7 @@ using GraphEditor.Models;
 
 namespace GraphEditor.Algorithms.Tagging;
 
-public class GenericPrefluxAlgorithm : IAlgorithm
+public class FIFOPrefluxAlgorithm : IAlgorithm
 {
     public (int MaxFlow, Graph ResultingGraph) Run(Graph graph, Action<Graph<ResidualEdge>> onNewResidualGraph) =>
         Run(graph, graph.Nodes.Min(x => x.Number), graph.Nodes.Max(x => x.Number), 0, onNewResidualGraph);
@@ -55,7 +55,7 @@ public class GenericPrefluxAlgorithm : IAlgorithm
 
     private ExcessGraphState SetInitialFlow(ExcessGraphState graphState, int startNode)
     {
-        var newGraphState = graphState with {};
+        var newGraphState = graphState with { };
 
         foreach (var adjacentNode in graphState.AdjacencyList[startNode])
         {
