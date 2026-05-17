@@ -68,7 +68,7 @@ public class MainViewModel : ViewModelBase
         ExecuteStratified = new AlgorithmCommand(GetGraph, new StratifiedAlgorithm(), navigateCommand, graphStore);
         ExecutePrefluxGeneric = new AlgorithmCommand(GetGraph, new GenericPrefluxAlgorithm(), navigateCommand, graphStore);
         ExecutePrefluxFIFO = new AlgorithmCommand(GetGraph, new FIFOPrefluxAlgorithm(), navigateCommand, graphStore);
-        //ExecutePrefluxBiggestTag = new AlgorithmCommand(GetGraph, new(), navigateCommand, graphStore);
+        ExecutePrefluxBiggestTag = new AlgorithmCommand(GetGraph, new ExcessScalingAlgorithm(), navigateCommand, graphStore);
         PropertyChanged += CurrentViewModelChangedHandler;
     }
 
