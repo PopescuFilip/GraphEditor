@@ -50,7 +50,7 @@ public static class FlowGraphExtensions
         return flowGraphState with { Edges = newEdges };
     }
 
-    public static GraphState<ResidualEdge> ToResidual<T>(this GraphState<T> flowGraphState) where T : FlowEdge
+    public static GraphState<ResidualEdge> ToResidual(this GraphState<FlowEdge> flowGraphState)
     {
         var processedEdges = new HashSet<(int, int)>();
         var residualGraphState = GraphState<ResidualEdge>.Empty;
@@ -80,7 +80,7 @@ public static class FlowGraphExtensions
         return residualGraphState;
     }
 
-    private static int ResidualValueFor<T>(this GraphState<T> graphState, (int, int) startEnd) where T : FlowEdge
+    private static int ResidualValueFor(this GraphState<FlowEdge> graphState, (int, int) startEnd)
     {
         var capacity = graphState.Edges.TryGetValue(startEnd, out var edge)
             ? edge.Capacity
